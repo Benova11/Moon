@@ -233,10 +233,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -275,6 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b31d757a2e5b34dff8501c7a00d9a355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardManager: {fileID: 674002849}
 --- !u!4 &104109909
 Transform:
   m_ObjectHideFlags: 0
@@ -287,7 +293,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &123187905
 GameObject:
@@ -449,10 +455,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -648,10 +659,20 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -773,10 +794,20 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -898,10 +929,20 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -1004,6 +1045,7 @@ GameObject:
   m_Component:
   - component: {fileID: 674002847}
   - component: {fileID: 674002848}
+  - component: {fileID: 674002849}
   m_Layer: 5
   m_Name: BoardInterfaceGrid
   m_TagString: Untagged
@@ -1047,6 +1089,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674002846}
   m_CullTransparentMesh: 0
+--- !u!114 &674002849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674002846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99788021ab384494ad8e90a3b0468cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  XPiecePrefab: {fileID: 803210900996445880, guid: f7a6c31a3f2b44bf8b569923e00cf823,
+    type: 3}
+  OPiecePrefab: {fileID: 7119811501664481495, guid: b386664cbe99b4456a1c163d536ef4f5,
+    type: 3}
+  boardContainer: {fileID: 674002846}
 --- !u!1001 &722700257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1162,7 +1221,7 @@ PrefabInstance:
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -1284,10 +1343,20 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -1409,10 +1478,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
@@ -1708,6 +1782,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1856455028}
+  - {fileID: 2004845612}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1894,12 +1969,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2004845609}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1024, y: -1024, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 1781873203}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2059776484
 GameObject:
@@ -2087,10 +2162,15 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: gridPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
-      value: BoardPiece
+      value: BoardTile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdf40bd282eea428bb213e05049eae03, type: 3}
