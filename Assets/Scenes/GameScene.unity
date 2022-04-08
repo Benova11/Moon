@@ -285,9 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b31d757a2e5b34dff8501c7a00d9a355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnTimeInterval: 5
+  turnTimeInterval: 1000
   boardManager: {fileID: 674002849}
   currentPlayerType: 0
+  isBotMode: 1
 --- !u!4 &104109909
 Transform:
   m_ObjectHideFlags: 0

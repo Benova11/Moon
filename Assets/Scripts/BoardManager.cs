@@ -14,7 +14,7 @@ public class BoardManager : MonoBehaviour
   List<PieceType> currentBoardPieces;
   List<int> lastMoves;
 
-  //public List<int> LastMoves { get { return lastMoves; } }
+  public List<PieceType> CurrentBoardPieces { get { return currentBoardPieces; } }
 
   void Start()
   {
@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour
       currentBoardPieces.Add(PieceType.Empty);
   }
 
-  public void GenarateNextBoardPiece(int gridIndex)
+  public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
   {
     if (currentBoardPieces[gridIndex] != PieceType.Empty || NumOfEmptyTiles == 0)
     {
@@ -39,7 +39,7 @@ public class BoardManager : MonoBehaviour
     currentBoardPieces[gridIndex] = CurrentPlayerPiece;
     Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
     lastMoves.Insert(0, gridIndex);
-    GameManager.Instance.OnPlayerMove(IsBoardOnWinState());
+    GameManager.Instance.OnPlayerMove(IsBoardOnWinState(), isBot);
   }
 
   public void ResetLastTurnTiles()

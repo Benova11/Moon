@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
 
   public PieceType currentPlayerType = PieceType.X;
   bool turnPlayed = false;
+  public bool isBotMode = true;
 
   void Start()
   {
@@ -23,22 +24,32 @@ public class GameManager : Singleton<GameManager>
   {
     if (IsGameActive)
     {
-      //currentTurnTimeRemaining -= Time.deltaTime;
+      currentTurnTimeRemaining -= Time.deltaTime;
       UIManager.Instance.SetTimerText(Mathf.RoundToInt(currentTurnTimeRemaining).ToString());
       if (currentTurnTimeRemaining <= 0)
         OnTimesUp();
     }
   }
 
-  public void OnPlayerMove(bool isWon = false)
+  public void OnPlayerMove(bool isWon = false,bool isBotTurn = false)
   {
     ResertTimer();
     if (!isWon)
+    {
       SwitchPlayer();
+      if (isBotMode && !isBotTurn)
+        PlayBotTurn();
+    }
     else if (boardManager.NumOfEmptyTiles != 0)
       OnPlayerWon();
     else
       OnDraw();
+  }
+
+  public void PlayBotTurn()
+  {
+    int indexToPlayOn = boardManager.CurrentBoardPieces.FindIndex(pieceType => pieceType == PieceType.Empty);
+    boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
   }
 
   public void UndoLastTurn()
