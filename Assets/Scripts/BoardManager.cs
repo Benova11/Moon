@@ -3,31 +3,57 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-  PlayerType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
-  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x < 0).Count; } }
+  PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
+  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
   bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
 
   [SerializeField] GameObject XPiecePrefab;
   [SerializeField] GameObject OPiecePrefab;
 
   [SerializeField] GameObject boardContainer;
-  List<int> currentBoardPieces;
+  List<PieceType> currentBoardPieces;
+  List<int> lastMoves;
+
+  //public List<int> LastMoves { get { return lastMoves; } }
 
   void Start()
   {
-    currentBoardPieces = new List<int> { -1, -2, -3, -4, -5, -6, -7, -8, -9 };
+    InitCurrentBoardPiecesList();
+    lastMoves = new List<int>();
+  }
+
+  void InitCurrentBoardPiecesList()
+  {
+    currentBoardPieces = new List<PieceType>();
+    for(int i=0; i<9; i++)
+      currentBoardPieces.Add(PieceType.Empty);
   }
 
   public void GenarateNextBoardPiece(int gridIndex)
   {
-    if (currentBoardPieces[gridIndex] > 0 || NumOfEmptyTiles == 0)
+    if (currentBoardPieces[gridIndex] != PieceType.Empty || NumOfEmptyTiles == 0)
     {
       return; //place already taken or board full
     }
-    GameObject piecePrefabToInstantiate = CurrentPlayerPiece == PlayerType.X ? XPiecePrefab : OPiecePrefab;
-    currentBoardPieces[gridIndex] = (int)CurrentPlayerPiece;
+    GameObject piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
+    currentBoardPieces[gridIndex] = CurrentPlayerPiece;
     Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    lastMoves.Insert(0, gridIndex);
     GameManager.Instance.OnPlayerMove(IsBoardOnWinState());
+  }
+
+  public void ResetLastTurnTiles()
+  {
+    if (lastMoves.Count > 0 && lastMoves.Count % 2 == 0)
+    {
+      for (int i = 0; i < 2; i++)
+      {
+        int lastTurnIndex = lastMoves[0];
+        lastMoves.Remove(lastTurnIndex);
+        currentBoardPieces[lastTurnIndex] = PieceType.Empty;
+        Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
+      }
+    }
   }
 
   bool IsBoardOnWinState()
@@ -41,6 +67,7 @@ public class BoardManager : MonoBehaviour
     bool isRowWin = false;
     for (int i = 0; i < 9; i+=3)
     {
+      if (currentBoardPieces[i] == PieceType.Empty) break;
       if (currentBoardPieces[i] == currentBoardPieces[i + 1] && currentBoardPieces[i + 1] == currentBoardPieces[i + 2]) isRowWin = true;
     }
     return isRowWin;
@@ -51,6 +78,7 @@ public class BoardManager : MonoBehaviour
     bool isColWin = false;
     for (int i = 0; i < 3; i ++)
     {
+      if (currentBoardPieces[i] == PieceType.Empty) break;
       if (currentBoardPieces[i] == currentBoardPieces[i + 3] && currentBoardPieces[i + 3] == currentBoardPieces[i + 6]) isColWin = true;
     }
     return isColWin;
@@ -58,7 +86,20 @@ public class BoardManager : MonoBehaviour
 
   bool IsDiagonalWin()
   {
+    if (currentBoardPieces[4] == PieceType.Empty) return false;
     return (currentBoardPieces[0] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[8])
          ||(currentBoardPieces[2] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[6]);
+  }
+
+  public void ClearBoard()
+  {
+    int numOfCurrentBoardPieces = 9 - NumOfEmptyTiles;
+    for (int i = 0; i < numOfCurrentBoardPieces; i++)
+    {
+      int lastTurnIndex = lastMoves[0];
+      lastMoves.Remove(lastTurnIndex);
+      currentBoardPieces[lastTurnIndex] = PieceType.Empty;
+      Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
+    }
   }
 }
