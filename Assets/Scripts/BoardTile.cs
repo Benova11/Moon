@@ -11,6 +11,7 @@ public class BoardTile : MonoBehaviour
 
   void PlaceBoardPiece()
   {
-    GameManager.Instance.boardManager.GenarateNextBoardPiece(gridIndex);
+    if(GameManager.Instance.IsGameActive)
+      GameManager.Instance.boardManager.GenarateNextBoardPiece(gridIndex);
   }
 }

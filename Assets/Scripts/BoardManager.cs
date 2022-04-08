@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-  enum PlayerType { X, O }
-  PlayerType currentPlayerType = PlayerType.X;
-  int CurrentPlayerPieceValue { get { return (int)currentPlayerType; } }
+  PlayerType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
   int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x < 0).Count; } }
+  bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
 
   [SerializeField] GameObject XPiecePrefab;
   [SerializeField] GameObject OPiecePrefab;
@@ -25,14 +24,13 @@ public class BoardManager : MonoBehaviour
     {
       return; //place already taken or board full
     }
-    GameObject piecePrefabToInstantiate = currentPlayerType == PlayerType.X ? XPiecePrefab : OPiecePrefab;
-    currentBoardPieces[gridIndex] = CurrentPlayerPieceValue;
-    currentPlayerType = (PlayerType)Mathf.Abs(1 - CurrentPlayerPieceValue);
+    GameObject piecePrefabToInstantiate = CurrentPlayerPiece == PlayerType.X ? XPiecePrefab : OPiecePrefab;
+    currentBoardPieces[gridIndex] = (int)CurrentPlayerPiece;
     Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
-    if (CheckBoardState()) Debug.Log(currentPlayerType + "wins");
+    GameManager.Instance.OnPlayerMove(IsBoardOnWinState());
   }
 
-  bool CheckBoardState()
+  bool IsBoardOnWinState()
   {
     Debug.Log(NumOfEmptyTiles);
     return (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
