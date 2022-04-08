@@ -4,7 +4,7 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
   PlayerType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
-  int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x < 0).Count; } }
+  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x < 0).Count; } }
   bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
 
   [SerializeField] GameObject XPiecePrefab;

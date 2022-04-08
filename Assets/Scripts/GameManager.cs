@@ -10,7 +10,6 @@ public class GameManager : Singleton<GameManager>
   public bool IsGameActive { get { return isGameActive; } }
 
   public BoardManager boardManager;
-  public UIManager uIManager;
 
   public PlayerType currentPlayerType = PlayerType.X;
   bool turnPlayed = false;
@@ -36,18 +35,25 @@ public class GameManager : Singleton<GameManager>
     currentTurnTimeRemaining = turnTimeInterval;
     if (!isWon)
       currentPlayerType = (PlayerType)Mathf.Abs(1 - (int)currentPlayerType);
-    else
+    else if (boardManager.NumOfEmptyTiles != 0)
       OnPlayerWon();
+    else
+      OnDraw();
   }
 
-  public void OnPlayerWon()
+  void OnPlayerWon()
   {
     Debug.Log(currentPlayerType + "Won!");
   }
 
-  public void OnTimesUp()
+  void OnTimesUp()
   {
     isGameActive = false;
     Debug.Log("Times Up!!");
+  }
+
+  void OnDraw()
+  {
+
   }
 }
