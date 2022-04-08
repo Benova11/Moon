@@ -25,7 +25,7 @@ public class GameManager : Singleton<GameManager>
     if (IsGameActive)
     {
       currentTurnTimeRemaining -= Time.deltaTime;
-      UIManager.Instance.SetTimerText(((int)currentTurnTimeRemaining).ToString());
+      UIManager.Instance.SetTimerText(Mathf.RoundToInt(currentTurnTimeRemaining).ToString());
       if (currentTurnTimeRemaining <= 0)
         OnTimesUp();
     }
