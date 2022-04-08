@@ -6,7 +6,7 @@ public class BoardManager : MonoBehaviour
   enum PlayerType { X, O }
   PlayerType currentPlayerType = PlayerType.X;
   int CurrentPlayerPieceValue { get { return (int)currentPlayerType; } }
-  int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x == -1).Count; } }
+  int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(x => x < 0).Count; } }
 
   [SerializeField] GameObject XPiecePrefab;
   [SerializeField] GameObject OPiecePrefab;
@@ -16,12 +16,12 @@ public class BoardManager : MonoBehaviour
 
   void Start()
   {
-    currentBoardPieces = new List<int> { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+    currentBoardPieces = new List<int> { -1, -2, -3, -4, -5, -6, -7, -8, -9 };
   }
 
   public void GenarateNextBoardPiece(int gridIndex)
   {
-    if (currentBoardPieces[gridIndex] != -1 || NumOfEmptyTiles == 0)
+    if (currentBoardPieces[gridIndex] > 0 || NumOfEmptyTiles == 0)
     {
       return; //place already taken or board full
     }
@@ -29,37 +29,38 @@ public class BoardManager : MonoBehaviour
     currentBoardPieces[gridIndex] = CurrentPlayerPieceValue;
     currentPlayerType = (PlayerType)Mathf.Abs(1 - CurrentPlayerPieceValue);
     Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
-    CheckBoardState();
+    if (CheckBoardState()) Debug.Log(currentPlayerType + "wins");
   }
 
-  void CheckBoardState()
+  bool CheckBoardState()
   {
-    if (NumOfEmptyTiles > 5) return;
-
-    for (int i = 1; i <= 3; i++)
-    {
-      if (currentBoardPieces[i - 1] == (int)PlayerType.X)
-        Debug.Log("");
-      else if (currentBoardPieces[i - 1] == (int)PlayerType.O)
-        Debug.Log("");
-
-      if (currentBoardPieces[i*3 - 1] == (int)PlayerType.X)
-        Debug.Log("");
-      else if (currentBoardPieces[i*3 - 1] == (int)PlayerType.O)
-        Debug.Log("");
-
-      if (i < 3)
-      {
-        if (currentBoardPieces[i * 4 - 1] == (int)PlayerType.X)
-          Debug.Log("");
-        else if (currentBoardPieces[i * 4 - 1] == (int)PlayerType.O)
-          Debug.Log("");
-      }
-
-    }
+    Debug.Log(NumOfEmptyTiles);
+    return (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
   }
 
-  //  if (currentBoardPieces[i * 1 - 1] == (int) PlayerType.X)
-  //else if (currentBoardPieces[i + 1] == (int) PlayerType.O)
+  bool IsRowWin()
+  {
+    bool isRowWin = false;
+    for (int i = 0; i < 9; i+=3)
+    {
+      if (currentBoardPieces[i] == currentBoardPieces[i + 1] && currentBoardPieces[i + 1] == currentBoardPieces[i + 2]) isRowWin = true;
+    }
+    return isRowWin;
+  }
 
+  bool IsColumnWin()
+  {
+    bool isColWin = false;
+    for (int i = 0; i < 3; i ++)
+    {
+      if (currentBoardPieces[i] == currentBoardPieces[i + 3] && currentBoardPieces[i + 3] == currentBoardPieces[i + 6]) isColWin = true;
+    }
+    return isColWin;
+  }
+
+  bool IsDiagonalWin()
+  {
+    return (currentBoardPieces[0] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[8])
+         ||(currentBoardPieces[2] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[6]);
+  }
 }
