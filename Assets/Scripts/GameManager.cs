@@ -17,6 +17,7 @@ public class GameManager : Singleton<GameManager>
 
   void Start()
   {
+    UIManager.Instance.OnGameStarts();
     ResertTimer();
   }
 
@@ -64,19 +65,22 @@ public class GameManager : Singleton<GameManager>
   void OnPlayerWon()
   {
     isGameActive = false;
-    Debug.Log(currentPlayerType + "Won!");
+    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins");
   }
 
   void OnTimesUp()
   {
     isGameActive = false;
     currentTurnTimeRemaining = 0;
-    Debug.Log("Times Up!!");
+    SwitchPlayer();
+    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins");
   }
 
   void OnDraw()
   {
-
+    isGameActive = false;
+    currentTurnTimeRemaining = 0;
+    UIManager.Instance.OnEndOfGame("Draw");
   }
 
   void SwitchPlayer()
@@ -95,6 +99,7 @@ public class GameManager : Singleton<GameManager>
     currentTurnTimeRemaining = 5;
     boardManager.ClearBoard();
     currentPlayerType = (PieceType)Random.Range(0, 2);
+    UIManager.Instance.OnGameStarts();
     isGameActive = true;
   }
 }
