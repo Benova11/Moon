@@ -1,18 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+  GameMode selectedMode = GameMode.PVP;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  public void StartGame()
+  {
+    SceneManager.LoadSceneAsync("GameScene").completed += (AsyncOperation obj) =>
+    { GameManager.Instance.StartGame(selectedMode); };
+  }
+
+  //public void 
 }

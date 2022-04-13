@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
+public enum GameMode { PVP, PVC }
 public enum PieceType { X, O, Empty }
+
 public class GameManager : Singleton<GameManager>
 {
   bool isGameActive = true;
@@ -13,10 +15,11 @@ public class GameManager : Singleton<GameManager>
 
   public PieceType currentPlayerType = PieceType.X;
   bool turnPlayed = false;
-  public bool isBotMode = true;
+  bool isPVCMode = true;
 
-  void Start()
+  public void StartGame(GameMode selectedGameMode)
   {
+    isPVCMode = selectedGameMode == GameMode.PVC;
     UIManager.Instance.OnGameStarts();
     ResertTimer();
   }
@@ -38,7 +41,7 @@ public class GameManager : Singleton<GameManager>
     if (!isWon)
     {
       SwitchPlayer();
-      if (isBotMode && !isBotTurn)
+      if (isPVCMode && !isBotTurn)
         PlayBotTurn();
     }
     else if (boardManager.NumOfEmptyTiles != 0)
