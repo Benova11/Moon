@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3550059442606368548}
   - component: {fileID: 2268979573929928406}
   - component: {fileID: 3575898312241630790}
+  - component: {fileID: 7491415684729129954}
   m_Layer: 5
   m_Name: OBoardPiece
   m_TagString: Untagged
@@ -74,3 +75,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7491415684729129954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7119811501664481495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6202659bede24853b38e13891c3e1d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 3575898312241630790}

@@ -5,10 +5,10 @@ public class BoardManager : MonoBehaviour
 {
   PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
   public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
-  bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
+  //bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
 
-  [SerializeField] GameObject XPiecePrefab;
-  [SerializeField] GameObject OPiecePrefab;
+  [SerializeField] BoardPiece XPiecePrefab;
+  [SerializeField] BoardPiece OPiecePrefab;
 
   [SerializeField] GameObject boardContainer;
   List<PieceType> currentBoardPieces;
@@ -35,9 +35,10 @@ public class BoardManager : MonoBehaviour
     {
       return; //place already taken or board full
     }
-    GameObject piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
+    BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
     currentBoardPieces[gridIndex] = CurrentPlayerPiece;
-    Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    boardPiece.SetIconImage(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon);
     lastMoves.Insert(0, gridIndex);
     GameManager.Instance.OnPlayerMove(IsBoardOnWinState(), isBot);
   }
@@ -58,7 +59,6 @@ public class BoardManager : MonoBehaviour
 
   bool IsBoardOnWinState()
   {
-    Debug.Log(NumOfEmptyTiles);
     return (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
   }
 

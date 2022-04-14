@@ -288,7 +288,9 @@ MonoBehaviour:
   turnTimeInterval: 5
   boardManager: {fileID: 674002849}
   currentPlayerType: 0
-  isBotMode: 1
+  xPlayerIcon: {fileID: 0}
+  oPlayerIcon: {fileID: 0}
+  gameBg: {fileID: 1856455029}
 --- !u!4 &104109909
 Transform:
   m_ObjectHideFlags: 0
@@ -1192,7 +1194,7 @@ RectTransform:
   - {fileID: 1938203923}
   - {fileID: 1506384908}
   m_Father: {fileID: 1781873203}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1348,9 +1350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99788021ab384494ad8e90a3b0468cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XPiecePrefab: {fileID: 803210900996445880, guid: f7a6c31a3f2b44bf8b569923e00cf823,
+  XPiecePrefab: {fileID: 7653553746698119186, guid: f7a6c31a3f2b44bf8b569923e00cf823,
     type: 3}
-  OPiecePrefab: {fileID: 7119811501664481495, guid: b386664cbe99b4456a1c163d536ef4f5,
+  OPiecePrefab: {fileID: 7491415684729129954, guid: b386664cbe99b4456a1c163d536ef4f5,
     type: 3}
   boardContainer: {fileID: 674002846}
 --- !u!1001 &722700257
@@ -1986,15 +1988,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1253220678}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 123187906}
   - {fileID: 1982598069}
   - {fileID: 674002847}
-  m_Father: {fileID: 1856455028}
-  m_RootOrder: 0
+  m_Father: {fileID: 1781873203}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2458,6 +2460,7 @@ RectTransform:
   m_Children:
   - {fileID: 2004845612}
   - {fileID: 1856455028}
+  - {fileID: 1253220679}
   - {fileID: 504843642}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -2495,8 +2498,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1253220679}
+  m_Children: []
   m_Father: {fileID: 1781873203}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

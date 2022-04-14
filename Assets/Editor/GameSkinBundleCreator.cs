@@ -9,10 +9,7 @@ public class GameSkinBundleCreator : EditorWindow
   Texture2D oSymbolSkin;
   Texture2D backgroundImg;
 
-  private void OnEnable()
-  {
-    //todo load last assets
-  }
+  //static readonly string bundlesDirPath = Path.Combine(Application.streamingAssetsPath, "SkinBundles");
 
   [MenuItem("Window/Bundle Skin")]
   public static void ShowWindow()
@@ -40,8 +37,6 @@ public class GameSkinBundleCreator : EditorWindow
           return;
         }
         BuildMapABs(skinName, AssetDatabase.GetAssetPath(xSymbolSkin), AssetDatabase.GetAssetPath(oSymbolSkin), AssetDatabase.GetAssetPath(backgroundImg));
-
-
       }
     }
     EditorGUILayout.EndVertical();
@@ -72,8 +67,12 @@ public class GameSkinBundleCreator : EditorWindow
 
     buildMap[0].assetNames = skinAssets;
 
-    //$"{skinFilesDir + xIconName + "png"}";
-
-    BuildPipeline.BuildAssetBundles("Assets/StreamingAssets/SkinBundles", buildMap, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
+    BuildPipeline.BuildAssetBundles(Path.Combine(Application.streamingAssetsPath, "SkinBundles"), buildMap, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
   }
+
+  //public static Sprite[] LoadSkinBundle(string bundleName)
+  //{
+  //  AssetBundle myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(bundlesDirPath, bundleName));
+  //  return myLoadedAssetBundle.LoadAllAssets<Sprite>();
+  //}
 }
