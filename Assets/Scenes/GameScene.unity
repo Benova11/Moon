@@ -766,6 +766,9 @@ MonoBehaviour:
   timerText: {fileID: 1706581111}
   endGameStatusText: {fileID: 161369823}
   endGamePanel: {fileID: 1506384905}
+  endGamePS: {fileID: 2084820528}
+  endGameAnimator: {fileID: 1506384909}
+  timerAnimator: {fileID: 807210531}
 --- !u!1 &381115205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +1294,7 @@ RectTransform:
   - {fileID: 1098268672}
   - {fileID: 1938203923}
   - {fileID: 1506384908}
+  - {fileID: 2084820526}
   m_Father: {fileID: 1781873203}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1594,6 +1598,7 @@ GameObject:
   - component: {fileID: 807210528}
   - component: {fileID: 807210530}
   - component: {fileID: 807210529}
+  - component: {fileID: 807210531}
   m_Layer: 5
   m_Name: TurnTimerPanel
   m_TagString: Untagged
@@ -1658,6 +1663,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807210527}
   m_CullTransparentMesh: 0
+--- !u!95 &807210531
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807210527}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d1b6a0d6c4d7b4d6c85d968f6ad35a39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &825422466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2194,13 +2218,14 @@ GameObject:
   - component: {fileID: 1506384908}
   - component: {fileID: 1506384907}
   - component: {fileID: 1506384906}
+  - component: {fileID: 1506384909}
   m_Layer: 5
   m_Name: EndOfGamePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1506384906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2250,7 +2275,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 161369821}
-  - {fileID: 2084820526}
   m_Father: {fileID: 504843642}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2259,6 +2283,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1028, y: 933}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!95 &1506384909
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506384905}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 62bd929e1c7ca43ffb11c01a8227c8ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1706581109
 GameObject:
   m_ObjectHideFlags: 0
@@ -2294,7 +2337,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 200, y: 179.3297}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1706581111
 MonoBehaviour:
@@ -2985,8 +3028,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1506384908}
-  m_RootOrder: 1
+  m_Father: {fileID: 504843642}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &2084820527
 ParticleSystemRenderer:

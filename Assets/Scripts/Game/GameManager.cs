@@ -9,7 +9,7 @@ public class GameManager : Singleton<GameManager>
   [SerializeField] float turnTimeInterval;
   bool isGameActive = true;
   bool isPlayerTurnAvailable = true;
-  float currentTurnTimeRemaining;
+  float currentTurnTimeRemaining = 5;
 
   public GameMode gameMode;
   public BoardManager boardManager;
@@ -27,7 +27,8 @@ public class GameManager : Singleton<GameManager>
     UIManager.Instance.OnGameStarts();
     ResertTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
-    SoundManager.Instance.PlayGameMusic();
+    if (SoundManager.Instance != null)
+      SoundManager.Instance.PlayGameMusic();
     if (gameMode == GameMode.CVC)
       Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
   }
@@ -58,7 +59,8 @@ public class GameManager : Singleton<GameManager>
     ResertTimer();
     if (!isWon && boardManager.NumOfEmptyTiles != 0)
     {
-      SoundManager.Instance.PlayPiecePlacedSound();
+      if (SoundManager.Instance != null)
+        SoundManager.Instance.PlayPiecePlacedSound();
       SwitchPlayer();
       if ((gameMode == GameMode.PVC && !isBotTurn) || (gameMode == GameMode.CVC && isBotTurn))
       {
@@ -93,25 +95,28 @@ public class GameManager : Singleton<GameManager>
   {
     isGameActive = false;
     currentTurnTimeRemaining = 0;
-    SoundManager.Instance.PlayWinSound();
-    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins");
+    if (SoundManager.Instance != null)
+      SoundManager.Instance.PlayWinSound();
+    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins", true);
   }
 
   void OnTimesUp()
   {
     isGameActive = false;
     currentTurnTimeRemaining = 0;
-    SoundManager.Instance.PlayWinSound();
+    if(SoundManager.Instance != null)
+      SoundManager.Instance.PlayWinSound();
     SwitchPlayer();
-    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins");
+    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
   }
 
   void OnDraw()
   {
     isGameActive = false;
     currentTurnTimeRemaining = 0;
-    SoundManager.Instance.PlayDrawSound();
-    UIManager.Instance.OnEndOfGame("Draw");
+    if (SoundManager.Instance != null)
+      SoundManager.Instance.PlayDrawSound();
+    UIManager.Instance.OnEndOfGame("Draw", false);
   }
 
   void SwitchPlayer()

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using TMPro;
-using System.Collections;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -8,10 +8,14 @@ public class UIManager : Singleton<UIManager>
   [SerializeField] TextMeshProUGUI endGameStatusText;
   [SerializeField] GameObject endGamePanel;
 
+  [SerializeField] ParticleSystem endGamePS;
+  [SerializeField] Animator endGameAnimator;
+  public Animator timerAnimator;
+
   public void OnGameStarts()
   {
-    if(endGamePanel.activeInHierarchy)
-      endGamePanel.SetActive(false);
+    endGameAnimator.SetBool("Visible", false);
+    timerAnimator.SetBool("TimerRuns", true);
   }
 
   public void SetTimerText(string time)
@@ -19,15 +23,18 @@ public class UIManager : Singleton<UIManager>
     timerText.text = time;
   }
 
-  public void OnEndOfGame(string endOfGameMsg)
+  public void OnEndOfGame(string endOfGameMsg, bool isWin)
   {
+    timerAnimator.SetBool("TimerRuns", false);
     endGameStatusText.text = endOfGameMsg;
-    StartCoroutine(OnEndOfGameRoutine());
+    StartCoroutine(OnEndOfGameRoutine(isWin));
   }
 
-  IEnumerator OnEndOfGameRoutine()
+  IEnumerator OnEndOfGameRoutine(bool isWin)
   {
-    yield return new WaitForSeconds(1);
-    endGamePanel.SetActive(true);
+    yield return new WaitForSeconds(0.25f);
+    if (isWin) endGamePS.Play();
+    yield return new WaitForSeconds(1f);
+    endGameAnimator.SetBool("Visible", true);
   }
 }
