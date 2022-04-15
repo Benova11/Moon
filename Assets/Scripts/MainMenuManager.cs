@@ -7,8 +7,11 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
   GameMode selectedGameMode = GameMode.PVP;
+  Difficulty selectedGameDifficulty = Difficulty.Medium;
+
   [SerializeField] CanvasGroup difficultyPanelCanvasGroup;
   [SerializeField] Button[] gameModesButtonsArr;
+  [SerializeField] Button[] gameDifficultiesButtonsArr;
   [SerializeField] TMP_InputField bundleName;
 
   Sprite xPlayerIcon;
@@ -18,23 +21,44 @@ public class MainMenuManager : MonoBehaviour
   void Start()
   {
     selectedGameMode = (GameMode)(1 - (int)selectedGameMode);
-    ToggleGameMode();
+    AdjustGameModesButtonsStyle();
+    AdjustDifficultyButtonsStyle((int)selectedGameDifficulty);
   }
 
   public void StartGame()
   {
     SoundManager.Instance.PlayClickSound();
     SceneManager.LoadSceneAsync("GameScene").completed += (AsyncOperation obj) =>
-    { GameManager.Instance.StartGame(selectedGameMode, xPlayerIcon, oPlayerIcon, gameBg); };
+    { GameManager.Instance.StartGame(selectedGameMode, selectedGameDifficulty, xPlayerIcon, oPlayerIcon, gameBg); };
   }
 
-  public void ToggleGameMode()
+  public void OnToggleGameMode()
   {
     SoundManager.Instance.PlayClickSound();
     difficultyPanelCanvasGroup.alpha = 1.3f - (float)selectedGameMode;
+    AdjustGameModesButtonsStyle();
+  }
+
+  void AdjustGameModesButtonsStyle()
+  {
     gameModesButtonsArr[(int)selectedGameMode].colors = GetGameModeButtonStyle(false);
     selectedGameMode = (GameMode)(1 - (int)selectedGameMode);
     gameModesButtonsArr[(int)selectedGameMode].colors = GetGameModeButtonStyle(true);
+  }
+
+  public void OnToggleGameDifficulty(int difficulty)
+  {
+    if (difficultyPanelCanvasGroup.alpha < 1) return;
+    SoundManager.Instance.PlayClickSound();
+    selectedGameDifficulty = (Difficulty)difficulty;
+
+    AdjustDifficultyButtonsStyle(difficulty);
+  }
+
+  void AdjustDifficultyButtonsStyle(int difficulty)
+  {
+    for (int i = 0; i < gameDifficultiesButtonsArr.Length; i++)
+      gameDifficultiesButtonsArr[i].colors = GetGameModeButtonStyle(i == difficulty);
   }
 
   ColorBlock GetGameModeButtonStyle(bool isSelected)
@@ -55,6 +79,7 @@ public class MainMenuManager : MonoBehaviour
     SoundManager.Instance.PlayClickSound();
     AssetBundle myLoadedAssetBundle = null;
     string bundlePathToLoad = Path.Combine(Application.streamingAssetsPath, "SkinBundles", bundleName.text);
+
     if (File.Exists(bundlePathToLoad) && myLoadedAssetBundle == null)
     {
       myLoadedAssetBundle = AssetBundle.LoadFromFile(bundlePathToLoad);
@@ -65,12 +90,8 @@ public class MainMenuManager : MonoBehaviour
       Debug.Log($"Bundle with the path {bundlePathToLoad} has been loaded.");
     }
     else if(myLoadedAssetBundle != null)
-    {
       Debug.LogWarning($"Bundle with the path {bundlePathToLoad} already loaded.");
-    }
     else
-    {
       Debug.LogWarning($"Bundle with the path {bundlePathToLoad} does not exists.");
-    }
   }
 }

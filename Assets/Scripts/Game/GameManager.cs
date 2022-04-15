@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public enum GameMode { PVP, PVC, CVC }
 public enum PieceType { X, O, Empty }
+public enum Difficulty { Easy, Medium, Hard}
 
 public class GameManager : Singleton<GameManager>
 {
@@ -12,8 +13,9 @@ public class GameManager : Singleton<GameManager>
   float currentTurnTimeRemaining = 5;
 
   public GameMode gameMode;
-  public BoardManager boardManager;
   public PieceType currentPlayerType = PieceType.X;
+  public Difficulty gameDifficulty;
+  public BoardManager boardManager;
   public bool IsGameActive { get { return isGameActive; } }
   public bool IsPlayerTurnAvailable { get { return isPlayerTurnAvailable; } }
 
@@ -21,9 +23,10 @@ public class GameManager : Singleton<GameManager>
   public Sprite xPlayerIcon;
   public Sprite oPlayerIcon;
 
-  public void StartGame(GameMode selectedGameMode, Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
+  public void StartGame(GameMode selectedGameMode, Difficulty selectedDifficulty, Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
   {
     gameMode = selectedGameMode;
+    gameDifficulty = selectedDifficulty;
     UIManager.Instance.OnGameStarts();
     ResertTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
