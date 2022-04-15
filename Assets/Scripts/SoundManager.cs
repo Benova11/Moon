@@ -11,11 +11,23 @@ public class SoundManager : Singleton<SoundManager>
   [SerializeField] AudioClip winClip;
   [SerializeField] AudioClip drawClip;
 
+  [SerializeField] float bgMusicVolume = 0.75f;
+
   public void PlayGameMusic()
   {
-    bgMusicSource.Stop();
-    bgMusicSource.clip = gameplayMusicClip;
-    bgMusicSource.Play();
+    LeanTween.value(bgMusicVolume, 0, 2)
+      .setOnUpdate(SetBgMusicVolume)
+      .setOnComplete(() =>
+      {
+        bgMusicSource.clip = gameplayMusicClip;
+        LeanTween.value(0, bgMusicVolume, 2)
+        .setOnUpdate(SetBgMusicVolume);
+      });
+  }
+
+  void SetBgMusicVolume(float volumeToSet)
+  {
+    bgMusicSource.volume = volumeToSet;
   }
 
   public void PlayClickSound()
@@ -37,4 +49,5 @@ public class SoundManager : Singleton<SoundManager>
   {
     soundsSource.PlayOneShot(drawClip);
   }
+
 }

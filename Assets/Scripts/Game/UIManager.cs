@@ -34,7 +34,7 @@ public class UIManager : Singleton<UIManager>
   {
     yield return new WaitForSeconds(0.25f);
     if (isWin) endGamePS.Play();
-    yield return new WaitForSeconds(1f);
+    yield return new WaitForSeconds(0.75f);
     endGameAnimator.SetBool("Visible", true);
   }
 }

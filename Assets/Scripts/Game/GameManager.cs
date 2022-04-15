@@ -8,7 +8,7 @@ public enum Difficulty { Easy, Medium, Hard}
 public class GameManager : Singleton<GameManager>
 {
   [SerializeField] float turnTimeInterval;
-  bool isGameActive = true;
+  bool isGameActive = false;
   bool isPlayerTurnAvailable = true;
   float currentTurnTimeRemaining = 5;
 
@@ -28,12 +28,13 @@ public class GameManager : Singleton<GameManager>
     gameMode = selectedGameMode;
     gameDifficulty = selectedDifficulty;
     UIManager.Instance.OnGameStarts();
-    ResertTimer();
+    ResetTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayGameMusic();
+    Invoke(nameof(SetGameActive), 1);
     if (gameMode == GameMode.CVC)
-      Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
+      Invoke(nameof(PlayBotTurn), Random.Range(3f, 5f));
   }
 
   void LateUpdate()
@@ -59,7 +60,7 @@ public class GameManager : Singleton<GameManager>
 
   public void OnBoardMove(bool isWon = false,bool isBotTurn = false)
   {
-    ResertTimer();
+    ResetTimer();
     if (!isWon && boardManager.NumOfEmptyTiles != 0)
     {
       if (SoundManager.Instance != null)
@@ -90,7 +91,7 @@ public class GameManager : Singleton<GameManager>
     if (isGameActive)
     {
       boardManager.ResetLastTurnTiles();
-      ResertTimer();
+      ResetTimer();
     }
   }
 
@@ -127,7 +128,7 @@ public class GameManager : Singleton<GameManager>
     currentPlayerType = currentPlayerType == PieceType.X ? PieceType.O : PieceType.X;
   }
 
-  void ResertTimer()
+  void ResetTimer()
   {
     currentTurnTimeRemaining = turnTimeInterval;
   }
@@ -139,6 +140,11 @@ public class GameManager : Singleton<GameManager>
     boardManager.ClearBoard();
     currentPlayerType = (PieceType)Random.Range(0, 2);
     UIManager.Instance.OnGameStarts();
+    SetGameActive();
+  }
+
+  void SetGameActive()
+  {
     isGameActive = true;
   }
 }
