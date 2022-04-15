@@ -38,7 +38,7 @@ public class MainMenuManager : MonoBehaviour
   ColorBlock GetGameModeButtonStyle(bool isSelected)
   {
     ColorBlock colorBlock = new ColorBlock();
-    colorBlock.normalColor = new Color(1, 1, 1, isSelected ? 1f : 0f);
+    colorBlock.normalColor = new Color(1, 1, 1, isSelected ? 1f : 0.25f);
     colorBlock.highlightedColor = new Color(1, 1, 1, isSelected ? 1f : 0.5f);
     colorBlock.pressedColor = new Color(0.8f, 0.8f, 0.8f, isSelected ? 1f : 0.5f);
     colorBlock.selectedColor = colorBlock.normalColor;
