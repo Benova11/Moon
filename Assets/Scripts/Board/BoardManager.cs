@@ -35,7 +35,7 @@ public class BoardManager : MonoBehaviour
     BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
     currentBoardPieces[gridIndex] = CurrentPlayerPiece;
     BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
-    boardPiece.SetIconImage(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon);
+    boardPiece.OnPlacingPiece(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon);
     lastMoves.Insert(0, gridIndex);
     GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
   }
@@ -43,7 +43,6 @@ public class BoardManager : MonoBehaviour
   public void ResetLastTurnTiles()
   {
     if (lastMoves.Count > 0 && lastMoves.Count % 2 == 0)
-    {
       for (int i = 0; i < 2; i++)
       {
         int lastTurnIndex = lastMoves[0];
@@ -51,7 +50,6 @@ public class BoardManager : MonoBehaviour
         currentBoardPieces[lastTurnIndex] = PieceType.Empty;
         Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
       }
-    }
   }
 
   bool IsBoardOnWinState()

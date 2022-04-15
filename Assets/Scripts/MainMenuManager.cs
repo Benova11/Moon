@@ -28,7 +28,7 @@ public class MainMenuManager : MonoBehaviour
   public void StartGame()
   {
     SoundManager.Instance.PlayClickSound();
-    SceneManager.LoadSceneAsync("GameScene").completed += (AsyncOperation obj) =>
+    SceneManager.LoadSceneAsync("Game").completed += (AsyncOperation obj) =>
     { GameManager.Instance.StartGame(selectedGameMode, selectedGameDifficulty, xPlayerIcon, oPlayerIcon, gameBg); };
   }
 

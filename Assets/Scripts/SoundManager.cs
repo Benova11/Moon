@@ -22,7 +22,7 @@ public class SoundManager : Singleton<SoundManager>
         bgMusicSource.Stop();
         bgMusicSource.clip = gameplayMusicClip;
         bgMusicSource.Play();
-        LeanTween.value(0, bgMusicVolume, 1.5f)
+        LeanTween.value(0, bgMusicVolume, 1f)
         .setOnUpdate(SetBgMusicVolume);
       });
   }

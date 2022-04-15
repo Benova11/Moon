@@ -32,7 +32,7 @@ public class GameManager : Singleton<GameManager>
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayGameMusic();
-    Invoke(nameof(SetGameActive), 1);
+    Invoke(nameof(SetGameActive), 0.5f);
     if (gameMode == GameMode.CVC)
       Invoke(nameof(PlayBotTurn), Random.Range(3f, 5f));
   }
