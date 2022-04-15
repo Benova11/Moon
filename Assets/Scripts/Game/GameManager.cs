@@ -27,6 +27,7 @@ public class GameManager : Singleton<GameManager>
     UIManager.Instance.OnGameStarts();
     ResertTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
+    SoundManager.Instance.PlayGameMusic();
     if (gameMode == GameMode.CVC)
       Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
   }

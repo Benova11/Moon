@@ -23,12 +23,14 @@ public class MainMenuManager : MonoBehaviour
 
   public void StartGame()
   {
+    SoundManager.Instance.PlayClickSound();
     SceneManager.LoadSceneAsync("GameScene").completed += (AsyncOperation obj) =>
     { GameManager.Instance.StartGame(selectedGameMode, xPlayerIcon, oPlayerIcon, gameBg); };
   }
 
   public void ToggleGameMode()
   {
+    SoundManager.Instance.PlayClickSound();
     difficultyPanelCanvasGroup.alpha = 1.3f - (float)selectedGameMode;
     gameModesButtonsArr[(int)selectedGameMode].colors = GetGameModeButtonStyle(false);
     selectedGameMode = (GameMode)(1 - (int)selectedGameMode);
@@ -50,6 +52,7 @@ public class MainMenuManager : MonoBehaviour
 
   public void LoadSkinBundle()
   {
+    SoundManager.Instance.PlayClickSound();
     AssetBundle myLoadedAssetBundle = null;
     string bundlePathToLoad = Path.Combine(Application.streamingAssetsPath, "SkinBundles", bundleName.text);
     if (File.Exists(bundlePathToLoad) && myLoadedAssetBundle == null)
