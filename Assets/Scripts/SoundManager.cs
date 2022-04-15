@@ -15,12 +15,14 @@ public class SoundManager : Singleton<SoundManager>
 
   public void PlayGameMusic()
   {
-    LeanTween.value(bgMusicVolume, 0, 2)
+    LeanTween.value(bgMusicVolume, 0, 1)
       .setOnUpdate(SetBgMusicVolume)
       .setOnComplete(() =>
       {
+        bgMusicSource.Stop();
         bgMusicSource.clip = gameplayMusicClip;
-        LeanTween.value(0, bgMusicVolume, 2)
+        bgMusicSource.Play();
+        LeanTween.value(0, bgMusicVolume, 1.5f)
         .setOnUpdate(SetBgMusicVolume);
       });
   }
