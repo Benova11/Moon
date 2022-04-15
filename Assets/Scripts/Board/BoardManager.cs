@@ -20,6 +20,7 @@ public class BoardManager : MonoBehaviour
   {
     InitCurrentBoardPiecesList();
     lastMoves = new List<int>();
+
   }
 
   void InitCurrentBoardPiecesList()
@@ -31,16 +32,15 @@ public class BoardManager : MonoBehaviour
 
   public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
   {
-    if (currentBoardPieces[gridIndex] != PieceType.Empty || NumOfEmptyTiles == 0)
-    {
-      return; //place already taken or board full
-    }
+    if (!isBot && !GameManager.Instance.IsPlayerTurnAvailable) return;
+    if (currentBoardPieces[gridIndex] != PieceType.Empty || NumOfEmptyTiles == 0) return;
+
     BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
     currentBoardPieces[gridIndex] = CurrentPlayerPiece;
     BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
     boardPiece.SetIconImage(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon);
     lastMoves.Insert(0, gridIndex);
-    GameManager.Instance.OnPlayerMove(IsBoardOnWinState(), isBot);
+    GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
   }
 
   public void ResetLastTurnTiles()
@@ -58,9 +58,8 @@ public class BoardManager : MonoBehaviour
   }
 
   bool IsBoardOnWinState()
-  {
-    return (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
-  }
+    => (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
+  
 
   bool IsRowWin()
   {

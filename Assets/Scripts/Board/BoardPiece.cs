@@ -7,6 +7,7 @@ public class BoardPiece : MonoBehaviour
 
   public void SetIconImage(Sprite selectedIcon)
   {
+    if (selectedIcon == null) return;
     icon.sprite = selectedIcon;
   }
 }

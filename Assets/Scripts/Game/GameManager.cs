@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum GameMode { PVP, PVC }
+public enum GameMode { PVP, PVC, CVC }
 public enum PieceType { X, O, Empty }
 
 public class GameManager : Singleton<GameManager>
 {
   bool isGameActive = true;
-  float currentTurnTimeRemaining;
   [SerializeField] float turnTimeInterval;
+  float currentTurnTimeRemaining;
 
   public bool IsGameActive { get { return isGameActive; } }
 
   public BoardManager boardManager;
 
   public PieceType currentPlayerType = PieceType.X;
-  //bool turnPlayed = false;
-  bool isPVCMode = true;
+  bool isPlayerTurnAvailable = true;
+  public bool IsPlayerTurnAvailable { get { return isPlayerTurnAvailable; } }
+
+  public GameMode gameMode;
 
   public Sprite xPlayerIcon;
   public Sprite oPlayerIcon;
@@ -24,10 +26,12 @@ public class GameManager : Singleton<GameManager>
 
   public void StartGame(GameMode selectedGameMode, Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
   {
-    isPVCMode = selectedGameMode == GameMode.PVC;
+    gameMode = selectedGameMode;
     UIManager.Instance.OnGameStarts();
     ResertTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
+    if (gameMode == GameMode.CVC)
+      Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
   }
 
   void LateUpdate()
@@ -51,25 +55,29 @@ public class GameManager : Singleton<GameManager>
       gameBg.sprite = selectedBg;
   }
 
-  public void OnPlayerMove(bool isWon = false,bool isBotTurn = false)
+  public void OnBoardMove(bool isWon = false,bool isBotTurn = false)
   {
     ResertTimer();
     if (!isWon)
     {
       SwitchPlayer();
-      if (isPVCMode && !isBotTurn)
-        PlayBotTurn();
+      if ((gameMode == GameMode.PVC && !isBotTurn) || (gameMode == GameMode.CVC && isBotTurn))
+      {
+        isPlayerTurnAvailable = false;
+        Invoke(nameof(PlayBotTurn),Random.Range(1f,5f));
+      }        
     }
-    else if (boardManager.NumOfEmptyTiles != 0)
-      OnPlayerWon();
-    else
-      OnDraw();
+    else if (boardManager.NumOfEmptyTiles != 0) OnPlayerWon();
+    else OnDraw();
   }
 
   public void PlayBotTurn()
   {
+    isPlayerTurnAvailable = true;
     int indexToPlayOn = boardManager.CurrentBoardPieces.FindIndex(pieceType => pieceType == PieceType.Empty);
     boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+    if(gameMode == GameMode.PVC && IsGameActive)
+      Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
   }
 
   public void UndoLastTurn()
@@ -122,20 +130,5 @@ public class GameManager : Singleton<GameManager>
     isGameActive = true;
   }
 
-  // public void LoadSkinBundle(string bundleName)
-  //{
-  //  string bundlePathToLoad = Path.Combine(Application.streamingAssetsPath, "SkinBundles", bundleName);
-  //  if (File.Exists(bundlePathToLoad))
-  //  {
-  //    AssetBundle myLoadedAssetBundle = AssetBundle.LoadFromFile(bundlePathToLoad);
-  //    Sprite[] sprites = myLoadedAssetBundle.LoadAllAssets<Sprite>();
-  //    xPlayerIcon = sprites[0];
-  //    oPlayerIcon = sprites[1];
-  //    gameBg = sprites[2];
-  //  }
-  //  else
-  //  {
-  //    Debug.LogWarning($"Bundle with the path {bundlePathToLoad} does not exists.");
-  //  }
-  //}
+  
 }

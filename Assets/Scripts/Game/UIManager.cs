@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -21,6 +22,12 @@ public class UIManager : Singleton<UIManager>
   public void OnEndOfGame(string endOfGameMsg)
   {
     endGameStatusText.text = endOfGameMsg;
+    StartCoroutine(OnEndOfGameRoutine());
+  }
+
+  IEnumerator OnEndOfGameRoutine()
+  {
+    yield return new WaitForSeconds(1);
     endGamePanel.SetActive(true);
   }
 }

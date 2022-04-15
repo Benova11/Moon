@@ -6,7 +6,8 @@ public class BoardTile : MonoBehaviour
 
   public void OnTileClicked()
   {
-    PlaceBoardPiece();
+    if(GameManager.Instance.gameMode != GameMode.CVC)
+      PlaceBoardPiece();
   }
 
   void PlaceBoardPiece()
