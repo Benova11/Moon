@@ -3,24 +3,21 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-  PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
-  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
-  //bool IsGameActive { get { return GameManager.Instance.IsGameActive; } }
-
   [SerializeField] BoardPiece XPiecePrefab;
   [SerializeField] BoardPiece OPiecePrefab;
-
   [SerializeField] GameObject boardContainer;
-  List<PieceType> currentBoardPieces;
-  List<int> lastMoves;
 
+  List<PieceType> currentBoardPieces;
+  PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
+  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
   public List<PieceType> CurrentBoardPieces { get { return currentBoardPieces; } }
+
+  List<int> lastMoves;
 
   void Start()
   {
     InitCurrentBoardPiecesList();
     lastMoves = new List<int>();
-
   }
 
   void InitCurrentBoardPiecesList()

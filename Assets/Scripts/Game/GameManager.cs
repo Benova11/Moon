@@ -6,23 +6,20 @@ public enum PieceType { X, O, Empty }
 
 public class GameManager : Singleton<GameManager>
 {
-  bool isGameActive = true;
   [SerializeField] float turnTimeInterval;
+  bool isGameActive = true;
+  bool isPlayerTurnAvailable = true;
   float currentTurnTimeRemaining;
 
-  public bool IsGameActive { get { return isGameActive; } }
-
+  public GameMode gameMode;
   public BoardManager boardManager;
-
   public PieceType currentPlayerType = PieceType.X;
-  bool isPlayerTurnAvailable = true;
+  public bool IsGameActive { get { return isGameActive; } }
   public bool IsPlayerTurnAvailable { get { return isPlayerTurnAvailable; } }
 
-  public GameMode gameMode;
-
+  [SerializeField] Image gameBg;
   public Sprite xPlayerIcon;
   public Sprite oPlayerIcon;
-  [SerializeField] Image gameBg;
 
   public void StartGame(GameMode selectedGameMode, Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
   {
@@ -129,6 +126,4 @@ public class GameManager : Singleton<GameManager>
     UIManager.Instance.OnGameStarts();
     isGameActive = true;
   }
-
-  
 }
