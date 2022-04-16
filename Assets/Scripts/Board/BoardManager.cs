@@ -10,9 +10,12 @@ public class BoardManager : MonoBehaviour
   List<PieceType> currentBoardPieces;
   PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
   public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
-  public List<PieceType> CurrentBoardPieces { get { return currentBoardPieces; } }
+  public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
+  public List<BoardPiece> boardPieces;
 
   List<int> lastMoves;
+
+  public (int first,int second,int third) winningTriplet;
 
   void Start()
   {
@@ -30,7 +33,7 @@ public class BoardManager : MonoBehaviour
   public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
   {
     if (!isBot && !GameManager.Instance.IsPlayerTurnAvailable) return;
-    if (currentBoardPieces[gridIndex] != PieceType.Empty || NumOfEmptyTiles == 0) return;
+    if (currentBoardPieces[gridIndex] != PieceType.Empty) return;
 
     BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
     currentBoardPieces[gridIndex] = CurrentPlayerPiece;
@@ -61,8 +64,13 @@ public class BoardManager : MonoBehaviour
     bool isRowWin = false;
     for (int i = 0; i < 9; i+=3)
     {
-      if (currentBoardPieces[i] == PieceType.Empty) break;
-      if (currentBoardPieces[i] == currentBoardPieces[i + 1] && currentBoardPieces[i + 1] == currentBoardPieces[i + 2]) isRowWin = true;
+      if (currentBoardPieces[i] == PieceType.Empty) continue;
+      if (currentBoardPieces[i] == currentBoardPieces[i + 1] && currentBoardPieces[i + 1] == currentBoardPieces[i + 2])
+      {
+        winningTriplet = (i, i + 1, i + 2);
+        isRowWin = true;
+        break;
+      }
     }
     return isRowWin;
   }
@@ -70,10 +78,15 @@ public class BoardManager : MonoBehaviour
   bool IsColumnWin()
   {
     bool isColWin = false;
-    for (int i = 0; i < 3; i ++)
+    for (int i = 0; i < 3; i++)
     {
-      if (currentBoardPieces[i] == PieceType.Empty) break;
-      if (currentBoardPieces[i] == currentBoardPieces[i + 3] && currentBoardPieces[i + 3] == currentBoardPieces[i + 6]) isColWin = true;
+      if (currentBoardPieces[i] == PieceType.Empty) continue;
+      if (currentBoardPieces[i] == currentBoardPieces[i + 3] && currentBoardPieces[i + 3] == currentBoardPieces[i + 6])
+      {
+        winningTriplet = (i, i + 3, i + 6);
+        isColWin = true;
+        break;
+      }
     }
     return isColWin;
   }
@@ -81,12 +94,22 @@ public class BoardManager : MonoBehaviour
   bool IsDiagonalWin()
   {
     if (currentBoardPieces[4] == PieceType.Empty) return false;
-    return (currentBoardPieces[0] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[8])
-         ||(currentBoardPieces[2] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[6]);
+    if (currentBoardPieces[0] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[8])
+    {
+      winningTriplet = (0, 4, 8);
+      return true;
+    }
+    else if (currentBoardPieces[2] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[6])
+    {
+      winningTriplet = (2, 4, 6);
+      return true;
+    }
+    else return false;
   }
 
   public void ClearBoard()
   {
+    winningTriplet = (-1,-1,-1);
     int numOfCurrentBoardPieces = 9 - NumOfEmptyTiles;
     for (int i = 0; i < numOfCurrentBoardPieces; i++)
     {
@@ -95,5 +118,11 @@ public class BoardManager : MonoBehaviour
       currentBoardPieces[lastTurnIndex] = PieceType.Empty;
       Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
     }
+  }
+
+  public BoardPiece GetBoardPieceObject(int index)
+  {
+    return boardContainer.transform.GetChild(index).GetChild(0)
+            .gameObject.GetComponent<BoardPiece>();
   }
 }

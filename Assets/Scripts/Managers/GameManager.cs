@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public enum GameMode { PVP, PVC, CVC }
@@ -80,7 +81,7 @@ public class GameManager : Singleton<GameManager>
   public void PlayBotTurn()
   {
     isPlayerTurnAvailable = true;
-    int indexToPlayOn = boardManager.CurrentBoardPieces.FindIndex(pieceType => pieceType == PieceType.Empty);
+    int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
     if(gameMode == GameMode.PVC && IsGameActive)
       Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
@@ -97,6 +98,7 @@ public class GameManager : Singleton<GameManager>
 
   void OnPlayerWon()
   {
+    AnimateWininigTriplate();
     isGameActive = false;
     currentTurnTimeRemaining = 0;
     if (SoundManager.Instance != null)
@@ -141,6 +143,16 @@ public class GameManager : Singleton<GameManager>
     currentPlayerType = (PieceType)Random.Range(0, 2);
     UIManager.Instance.OnGameStarts();
     SetGameActive();
+  }
+
+  void AnimateWininigTriplate()
+  {
+    if (boardManager.winningTriplet == (-1, -1, -1)) return;
+    List<int> winningTripletIndexs = new List<int> { boardManager.winningTriplet.first, boardManager.winningTriplet.second, boardManager.winningTriplet.third };
+    winningTripletIndexs.Sort();
+    boardManager.GetBoardPieceObject(boardManager.winningTriplet.first).AnimateOnPartOfTriplet(0);
+    boardManager.GetBoardPieceObject(boardManager.winningTriplet.second).AnimateOnPartOfTriplet(0.15f);
+    boardManager.GetBoardPieceObject(boardManager.winningTriplet.third).AnimateOnPartOfTriplet(0.3f);
   }
 
   void SetGameActive()

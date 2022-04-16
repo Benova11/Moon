@@ -88,3 +88,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 3575898312241630790}
+  appeareDuration: 0.4

@@ -670,6 +670,7 @@ MonoBehaviour:
   timerText: {fileID: 1706581111}
   endGameStatusText: {fileID: 161369823}
   endGamePanel: {fileID: 1506384905}
+  restartButton: {fileID: 1938203922}
   endGamePS: {fileID: 2084820528}
   endGameAnimator: {fileID: 1506384909}
   timerAnimator: {fileID: 807210531}
@@ -1361,6 +1362,7 @@ MonoBehaviour:
   OPiecePrefab: {fileID: 7491415684729129954, guid: b386664cbe99b4456a1c163d536ef4f5,
     type: 3}
   boardContainer: {fileID: 674002846}
+  boardPieces: []
 --- !u!1001 &722700257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3007,7 +3009,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084820525}
   serializedVersion: 6
-  lengthInSec: 5
+  lengthInSec: 3
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -3082,7 +3084,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -3567,7 +3569,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 250
     size3D: 0
     rotation3D: 0
     gravityModifier:
