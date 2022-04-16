@@ -13,6 +13,19 @@ public class SoundManager : Singleton<SoundManager>
 
   [SerializeField] float bgMusicVolume = 0.75f;
 
+  void Start()
+  {
+    AdjustSoundsSettings();
+  }
+
+  public void AdjustSoundsSettings()
+  {
+    int musicState = PlayerPrefs.GetInt("Music", 1);
+    int sfxState = PlayerPrefs.GetInt("SFX", 1);
+    bgMusicSource.mute = musicState == 1 ? false : true;
+    soundsSource.mute = sfxState == 1 ? false : true;
+  }
+
   public void PlayGameMusic()
   {
     LeanTween.value(bgMusicVolume, 0, 1)
