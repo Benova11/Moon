@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
-//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.O, PieceType.O, PieceType.O, PieceType.X, PieceType.O, PieceType.X, PieceType.O, PieceType.X });
-//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
-
 public class BoardManager : MonoBehaviour
 {
   [SerializeField] BoardPiece XPiecePrefab;
   [SerializeField] BoardPiece OPiecePrefab;
   [SerializeField] GameObject boardContainer;
 
+  List<int> lastMoves;
   List<PieceType> currentBoardPieces;
-  public PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
+  PieceType currentPlayerPiece;
+  public (int first, int second, int third) winningTriplet;
+
+  public PieceType CurrentPlayerPiece { get { return  currentPlayerPiece; } }
+  public PieceType PlayerInPVCMode { get { return GameManager.Instance.playerInPVCMode; } }
   public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
   public List<BoardPiece> boardPieces;
   public int NumOfEmptyTiles
@@ -25,12 +26,9 @@ public class BoardManager : MonoBehaviour
     }
   }
 
-  List<int> lastMoves;
-
-  public (int first,int second,int third) winningTriplet;
-
-  void Start()
+  public void InitBoard(PieceType firstPlayerType)
   {
+    currentPlayerPiece = firstPlayerType;
     InitCurrentBoardPiecesList();
     lastMoves = new List<int>();
   }
@@ -40,6 +38,11 @@ public class BoardManager : MonoBehaviour
     currentBoardPieces = new List<PieceType>();
     for(int i=0; i<9; i++)
       currentBoardPieces.Add(PieceType.Empty);
+  }
+
+  public void SetCurrentPlayerType(PieceType pieceType)
+  {
+    currentPlayerPiece = pieceType;
   }
 
   public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
@@ -69,9 +72,13 @@ public class BoardManager : MonoBehaviour
   public void SetPreMadeBoardPieces(List<PieceType> preMadeBoard)
   {
     currentBoardPieces = preMadeBoard;
+    lastMoves = new List<int>();
+    foreach (PieceType pieceType in currentBoardPieces)
+      if(pieceType != PieceType.Empty)
+        lastMoves.Add((int)pieceType);
   }
 
-  public void ResetLastTurnTiles()
+  public void UndoLastTurnTiles()
   {
     if (lastMoves.Count > 0 && lastMoves.Count % 2 == 0)
       for (int i = 0; i < 2; i++)
@@ -79,7 +86,8 @@ public class BoardManager : MonoBehaviour
         int lastTurnIndex = lastMoves[0];
         lastMoves.Remove(lastTurnIndex);
         currentBoardPieces[lastTurnIndex] = PieceType.Empty;
-        Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
+        if(boardContainer!=null && boardContainer.transform.childCount > 0)
+          Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
       }
   }
 
@@ -111,6 +119,7 @@ public class BoardManager : MonoBehaviour
       if (preMadeBoard[i] == PieceType.Empty) continue;
       if (preMadeBoard[i] == preMadeBoard[i + 1] && preMadeBoard[i + 1] == preMadeBoard[i + 2])
       {
+        winningTriplet = (i, i + 1, i + 2);
         isRowWin = true;
         break;
       }
@@ -142,6 +151,7 @@ public class BoardManager : MonoBehaviour
       if (preMadeBoard[i] == PieceType.Empty) continue;
       if (preMadeBoard[i] == preMadeBoard[i + 3] && preMadeBoard[i + 3] == preMadeBoard[i + 6])
       {
+        winningTriplet = (i, i + 3, i + 6);
         isColWin = true;
         break;
       }
@@ -170,10 +180,12 @@ public class BoardManager : MonoBehaviour
     if (preMadeBoard[4] == PieceType.Empty) return false;
     if (preMadeBoard[0] == preMadeBoard[4] && preMadeBoard[4] == preMadeBoard[8])
     {
+      winningTriplet = (0, 4, 8);
       return true;
     }
     else if (preMadeBoard[2] == preMadeBoard[4] && preMadeBoard[4] == preMadeBoard[6])
     {
+      winningTriplet = (2, 4, 6);
       return true;
     }
     else return false;
@@ -191,8 +203,6 @@ public class BoardManager : MonoBehaviour
       Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
     }
   }
-
-  //public int GetNumOfEmptyTiles() { }
 
   public BoardPiece GetBoardPieceObject(int index)
   {

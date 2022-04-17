@@ -31,6 +31,7 @@ public class GameManager : Singleton<GameManager>
   {
     gameMode = selectedGameMode;
     gameDifficulty = selectedDifficulty;
+    boardManager.InitBoard(currentPlayerType);
     UIManager.Instance.OnGameStarts();
     ResetTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
@@ -108,7 +109,7 @@ public class GameManager : Singleton<GameManager>
   {
     if (isGameActive)
     {
-      boardManager.ResetLastTurnTiles();
+      boardManager.UndoLastTurnTiles();
       ResetTimer();
     }
   }
@@ -172,7 +173,7 @@ public class GameManager : Singleton<GameManager>
     isGameActive = false;
     currentTurnTimeRemaining = 5;
     boardManager.ClearBoard();
-    currentPlayerType = (PieceType)Random.Range(0, 2);
+    boardManager.SetCurrentPlayerType(currentPlayerType);
     UIManager.Instance.OnGameStarts();
     AdjustModeData();
     SetGameActive();
