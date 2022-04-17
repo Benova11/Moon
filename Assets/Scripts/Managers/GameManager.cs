@@ -55,7 +55,6 @@ public class GameManager : Singleton<GameManager>
   {
     if (gameMode == GameMode.CVC)
       CVCCoroutine = StartCoroutine(SimulateComputerGame());
-    //Invoke(nameof(PlayBotTurn), Random.Range(3f, 5f));
     else if (gameMode == GameMode.PVC)
       playerInPVCMode = currentPlayerType;
   }
@@ -75,14 +74,14 @@ public class GameManager : Singleton<GameManager>
     ResetTimer();
     if (!isWon && boardManager.NumOfEmptyTiles != 0)
     {
+      isPlayerTurnAvailable = false;
       if (SoundManager.Instance != null)
         SoundManager.Instance.PlayPiecePlacedSound();
       SwitchPlayer();
       if (gameMode == GameMode.PVC && !isBotTurn)
       {
-        isPlayerTurnAvailable = false;
         Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
-      }
+      }else isPlayerTurnAvailable = true;
     }
     else if (boardManager.NumOfEmptyTiles != 0)
       OnWin();
@@ -100,9 +99,9 @@ public class GameManager : Singleton<GameManager>
 
   void PlayBotTurn()
   {
-    isPlayerTurnAvailable = true;
     int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+    isPlayerTurnAvailable = true;
   }
 
   public void UndoLastTurn()
@@ -159,7 +158,7 @@ public class GameManager : Singleton<GameManager>
 
   void SwitchPlayer()
   {
-    currentPlayerType = currentPlayerType == PieceType.X ? PieceType.O : PieceType.X;
+    currentPlayerType = (PieceType)(1 - (int)currentPlayerType);
   }
 
   void ResetTimer()
@@ -175,6 +174,7 @@ public class GameManager : Singleton<GameManager>
     boardManager.ClearBoard();
     currentPlayerType = (PieceType)Random.Range(0, 2);
     UIManager.Instance.OnGameStarts();
+    AdjustModeData();
     SetGameActive();
   }
 

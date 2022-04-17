@@ -928,12 +928,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df1fb547cf054d62982d4b8ab0f27fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedGameMode: 2
   gameModesButtonsArr:
   - {fileID: 1278896139}
   - {fileID: 802139817}
-  pvpToggle: {fileID: 0}
-  pvcToggle: {fileID: 0}
-  cvcToggle: {fileID: 0}
+  - {fileID: 2007155041}
   bundleName: {fileID: 578016513}
 --- !u!4 &583873984
 Transform:
