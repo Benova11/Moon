@@ -20,6 +20,7 @@ public class SettingsManager : MonoBehaviour
     isMusicOn = musicState == 1;
     musicToggle.isOn = musicState == 1 ? true : false;
     sfxToggle.isOn = sfxState == 1 ? true : false;
+    OnToggleGameDifficulty(PlayerPrefs.GetInt("Difficulty", 1));
   }
 
   public void OnToggleGameDifficulty(int difficulty)

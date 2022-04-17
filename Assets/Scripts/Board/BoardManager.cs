@@ -8,10 +8,18 @@ public class BoardManager : MonoBehaviour
   [SerializeField] GameObject boardContainer;
 
   List<PieceType> currentBoardPieces;
-  PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
-  public int NumOfEmptyTiles { get { return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count; } }
+  public PieceType CurrentPlayerPiece { get { return GameManager.Instance.currentPlayerType; } }
   public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
   public List<BoardPiece> boardPieces;
+  public int NumOfEmptyTiles
+  {
+    get {
+      if (currentBoardPieces == null)
+        return -1;
+      else
+        return currentBoardPieces.FindAll(boardPiece => boardPiece == PieceType.Empty).Count;
+    }
+  }
 
   List<int> lastMoves;
 
@@ -43,6 +51,22 @@ public class BoardManager : MonoBehaviour
     GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
   }
 
+  //todo maybe not in use
+  public void GenarateNextBoardPiece(int gridIndex, PieceType pieceType)
+  {
+    if (currentBoardPieces[gridIndex] != PieceType.Empty) return;
+
+    BoardPiece piecePrefabToInstantiate = pieceType == PieceType.X ? XPiecePrefab : OPiecePrefab;
+    currentBoardPieces[gridIndex] = CurrentPlayerPiece;
+    Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    lastMoves.Insert(0, gridIndex);
+  }
+
+  public void SetPreMadeBoardPieces(List<PieceType> preMadeBoard)
+  {
+    currentBoardPieces = preMadeBoard;
+  }
+
   public void ResetLastTurnTiles()
   {
     if (lastMoves.Count > 0 && lastMoves.Count % 2 == 0)
@@ -55,11 +79,11 @@ public class BoardManager : MonoBehaviour
       }
   }
 
-  bool IsBoardOnWinState()
+  public bool IsBoardOnWinState()
     => (NumOfEmptyTiles < 5) && (IsRowWin() || IsColumnWin() || IsDiagonalWin());
   
 
-  bool IsRowWin()
+  public bool IsRowWin()
   {
     bool isRowWin = false;
     for (int i = 0; i < 9; i+=3)
@@ -75,7 +99,22 @@ public class BoardManager : MonoBehaviour
     return isRowWin;
   }
 
-  bool IsColumnWin()
+  public bool IsRowWin(List<PieceType> preMadeBoard)
+  {
+    bool isRowWin = false;
+    for (int i = 0; i < 9; i += 3)
+    {
+      if (preMadeBoard[i] == PieceType.Empty) continue;
+      if (preMadeBoard[i] == preMadeBoard[i + 1] && preMadeBoard[i + 1] == preMadeBoard[i + 2])
+      {
+        isRowWin = true;
+        break;
+      }
+    }
+    return isRowWin;
+  }
+
+  public bool IsColumnWin()
   {
     bool isColWin = false;
     for (int i = 0; i < 3; i++)
@@ -91,7 +130,7 @@ public class BoardManager : MonoBehaviour
     return isColWin;
   }
 
-  bool IsDiagonalWin()
+  public bool IsDiagonalWin()
   {
     if (currentBoardPieces[4] == PieceType.Empty) return false;
     if (currentBoardPieces[0] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[8])
@@ -119,6 +158,8 @@ public class BoardManager : MonoBehaviour
       Destroy(boardContainer.transform.GetChild(lastTurnIndex).GetChild(0).gameObject);
     }
   }
+
+  //public int GetNumOfEmptyTiles() { }
 
   public BoardPiece GetBoardPieceObject(int index)
   {

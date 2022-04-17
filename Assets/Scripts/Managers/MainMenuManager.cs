@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
-  GameMode selectedGameMode = GameMode.PVP;
+  [SerializeField] GameMode selectedGameMode = GameMode.PVC;
 
   [SerializeField] Button[] gameModesButtonsArr;
   [SerializeField] TMP_InputField bundleName;
@@ -17,8 +17,8 @@ public class MainMenuManager : MonoBehaviour
 
   void Start()
   {
-    selectedGameMode = (GameMode)(1 - (int)selectedGameMode);
-    AdjustGameModesButtonsStyle();
+    for (int i = 0; i < gameModesButtonsArr.Length; i++)
+      gameModesButtonsArr[i].colors = GetGameModeButtonStyle(i == (int)selectedGameMode);
   }
 
   public void StartGame()
@@ -28,17 +28,12 @@ public class MainMenuManager : MonoBehaviour
     { GameManager.Instance.StartGame(selectedGameMode, (Difficulty)PlayerPrefs.GetInt("Difficulty", 1), xPlayerIcon, oPlayerIcon, gameBg); };
   }
 
-  public void OnToggleGameMode()
+  public void OnToggleGameMode(int gameMode)
   {
     SoundManager.Instance.PlayClickSound();
-    AdjustGameModesButtonsStyle();
-  }
-
-  void AdjustGameModesButtonsStyle()
-  {
-    gameModesButtonsArr[(int)selectedGameMode].colors = GetGameModeButtonStyle(false);
-    selectedGameMode = (GameMode)(1 - (int)selectedGameMode);
-    gameModesButtonsArr[(int)selectedGameMode].colors = GetGameModeButtonStyle(true);
+    selectedGameMode = (GameMode)gameMode;
+    for (int i = 0; i < gameModesButtonsArr.Length; i++)
+      gameModesButtonsArr[i].colors = GetGameModeButtonStyle(i == gameMode);
   }
 
   ColorBlock GetGameModeButtonStyle(bool isSelected)
@@ -77,7 +72,6 @@ public class MainMenuManager : MonoBehaviour
 
   public void OpenSettings()
   {
-    SoundManager.Instance.PlayClickSound();
     SceneManager.LoadScene("Settings", LoadSceneMode.Additive);
   }
 }

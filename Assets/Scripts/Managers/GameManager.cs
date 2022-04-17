@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,10 @@ public class GameManager : Singleton<GameManager>
   bool isPlayerTurnAvailable = true;
   float currentTurnTimeRemaining = 5;
 
+  Coroutine CVCCoroutine;
   public GameMode gameMode;
   public PieceType currentPlayerType = PieceType.X;
+  public PieceType playerInPVCMode = PieceType.X;
   public Difficulty gameDifficulty;
   public BoardManager boardManager;
   public bool IsGameActive { get { return isGameActive; } }
@@ -34,8 +37,7 @@ public class GameManager : Singleton<GameManager>
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayGameMusic();
     Invoke(nameof(SetGameActive), 0.5f);
-    if (gameMode == GameMode.CVC)
-      Invoke(nameof(PlayBotTurn), Random.Range(3f, 5f));
+    AdjustModeData();
   }
 
   void LateUpdate()
@@ -47,6 +49,15 @@ public class GameManager : Singleton<GameManager>
       if (currentTurnTimeRemaining <= 0)
         OnTimesUp();
     }
+  }
+
+  void AdjustModeData()
+  {
+    if (gameMode == GameMode.CVC)
+      CVCCoroutine = StartCoroutine(SimulateComputerGame());
+    //Invoke(nameof(PlayBotTurn), Random.Range(3f, 5f));
+    else if (gameMode == GameMode.PVC)
+      playerInPVCMode = currentPlayerType;
   }
 
   void SetGameSkin(Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
@@ -67,24 +78,31 @@ public class GameManager : Singleton<GameManager>
       if (SoundManager.Instance != null)
         SoundManager.Instance.PlayPiecePlacedSound();
       SwitchPlayer();
-      if ((gameMode == GameMode.PVC && !isBotTurn) || (gameMode == GameMode.CVC && isBotTurn))
+      if (gameMode == GameMode.PVC && !isBotTurn)
       {
         isPlayerTurnAvailable = false;
-        Invoke(nameof(PlayBotTurn),Random.Range(1f,5f));
-      }        
+        Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
+      }
     }
     else if (boardManager.NumOfEmptyTiles != 0)
-      OnPlayerWon();
+      OnWin();
     else OnDraw();
   }
 
-  public void PlayBotTurn()
+  IEnumerator SimulateComputerGame()
+  {
+    while(boardManager.NumOfEmptyTiles != 0 || IsGameActive)
+    {
+      yield return new WaitForSeconds(Random.Range(1f, 4f));
+      PlayBotTurn();
+    }
+  }
+
+  void PlayBotTurn()
   {
     isPlayerTurnAvailable = true;
     int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
-    if(gameMode == GameMode.PVC && IsGameActive)
-      Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
   }
 
   public void UndoLastTurn()
@@ -96,33 +114,47 @@ public class GameManager : Singleton<GameManager>
     }
   }
 
-  void OnPlayerWon()
+  void OnWin()
   {
+    OnGameEnded();
     AnimateWininigTriplate();
-    isGameActive = false;
-    currentTurnTimeRemaining = 0;
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins", true);
+    if(gameMode == GameMode.PVC && playerInPVCMode == currentPlayerType)
+      UIManager.Instance.OnEndOfGame("You Win", true);
+    else if (gameMode == GameMode.PVC )
+      UIManager.Instance.OnEndOfGame("You Lost", false);
+    else
+      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins", true);
   }
 
   void OnTimesUp()
   {
-    isGameActive = false;
-    currentTurnTimeRemaining = 0;
-    if(SoundManager.Instance != null)
+    OnGameEnded();
+    if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    SwitchPlayer();
-    UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
+    if (gameMode == GameMode.PVC && playerInPVCMode == currentPlayerType)
+      UIManager.Instance.OnEndOfGame("You Lost", true);
+    else if (gameMode == GameMode.PVC)
+      UIManager.Instance.OnEndOfGame("You Win", false);
+    else
+      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
   }
 
   void OnDraw()
   {
-    isGameActive = false;
-    currentTurnTimeRemaining = 0;
+    OnGameEnded();
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayDrawSound();
     UIManager.Instance.OnEndOfGame("Draw", false);
+  }
+
+  void OnGameEnded()
+  {
+    isGameActive = false;
+    currentTurnTimeRemaining = 0;
+    if (CVCCoroutine != null)
+      StopCoroutine(CVCCoroutine);
   }
 
   void SwitchPlayer()
@@ -137,6 +169,7 @@ public class GameManager : Singleton<GameManager>
 
   public void RestartGame()
   {
+    SwitchPlayer();
     isGameActive = false;
     currentTurnTimeRemaining = 5;
     boardManager.ClearBoard();

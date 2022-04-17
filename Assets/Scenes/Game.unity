@@ -286,8 +286,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnTimeInterval: 5
-  gameMode: 0
+  gameMode: 2
   currentPlayerType: 0
+  playerInPVCMode: 0
   gameDifficulty: 0
   boardManager: {fileID: 674002849}
   gameBg: {fileID: 1856455029}
