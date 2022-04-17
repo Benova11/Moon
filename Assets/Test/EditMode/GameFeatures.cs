@@ -11,21 +11,12 @@ namespace Tests
     {
       var gameObject = new GameObject();
       var boardManager = gameObject.AddComponent<BoardManager>();
-      //bool isWin =
-      //       boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.O, PieceType.O, PieceType.O, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
-      //    && boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
+      bool isWin =
+             boardManager.IsRowWin(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty })
+          && boardManager.IsColumnWin(new List<PieceType> { PieceType.X, PieceType.O, PieceType.O, PieceType.X, PieceType.Empty, PieceType.Empty, PieceType.X, PieceType.Empty, PieceType.Empty })
+          && boardManager.IsDiagonalWin(new List<PieceType> { PieceType.X, PieceType.O, PieceType.O, PieceType.O, PieceType.X, PieceType.O, PieceType.X, PieceType.O, PieceType.X });
 
-      boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
-      Assert.AreEqual(boardManager.IsBoardOnWinState(), true);
-      //Assert.AreEqual(isWin, true);
-
+      Assert.AreEqual(isWin, true);
     }
 
     [Test]

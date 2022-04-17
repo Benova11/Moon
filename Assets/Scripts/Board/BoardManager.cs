@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
+//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.O, PieceType.O, PieceType.O, PieceType.X, PieceType.O, PieceType.X, PieceType.O, PieceType.X });
+//boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.X, PieceType.X, PieceType.O, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty, PieceType.Empty });
+
 public class BoardManager : MonoBehaviour
 {
   [SerializeField] BoardPiece XPiecePrefab;
@@ -130,6 +134,21 @@ public class BoardManager : MonoBehaviour
     return isColWin;
   }
 
+  public bool IsColumnWin(List<PieceType> preMadeBoard)
+  {
+    bool isColWin = false;
+    for (int i = 0; i < 3; i++)
+    {
+      if (preMadeBoard[i] == PieceType.Empty) continue;
+      if (preMadeBoard[i] == preMadeBoard[i + 3] && preMadeBoard[i + 3] == preMadeBoard[i + 6])
+      {
+        isColWin = true;
+        break;
+      }
+    }
+    return isColWin;
+  }
+
   public bool IsDiagonalWin()
   {
     if (currentBoardPieces[4] == PieceType.Empty) return false;
@@ -141,6 +160,20 @@ public class BoardManager : MonoBehaviour
     else if (currentBoardPieces[2] == currentBoardPieces[4] && currentBoardPieces[4] == currentBoardPieces[6])
     {
       winningTriplet = (2, 4, 6);
+      return true;
+    }
+    else return false;
+  }
+
+  public bool IsDiagonalWin(List<PieceType> preMadeBoard)
+  {
+    if (preMadeBoard[4] == PieceType.Empty) return false;
+    if (preMadeBoard[0] == preMadeBoard[4] && preMadeBoard[4] == preMadeBoard[8])
+    {
+      return true;
+    }
+    else if (preMadeBoard[2] == preMadeBoard[4] && preMadeBoard[4] == preMadeBoard[6])
+    {
       return true;
     }
     else return false;
