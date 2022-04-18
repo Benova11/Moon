@@ -126,6 +126,7 @@ public class GameManager : Singleton<GameManager>
 
   void OnWin()
   {
+    isPlayerTurnAvailable = true;
     OnGameEnded();
     AnimateWininigTriplate();
     if (SoundManager.Instance != null)
