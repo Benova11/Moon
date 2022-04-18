@@ -13,11 +13,22 @@ static class BoardMoveHelper
 
   static bool IsMovesLeft(PieceType[,] board)
   {
+    //for (int i = 0; i < 3; i++)
+    //  for (int j = 0; j < 3; j++)
+    //    if (board[i, j] == PieceType.Empty)
+    //      return true;
+    //return false;
+    return NumOfMovesLeft(board) > 0;
+  }
+
+  static int NumOfMovesLeft(PieceType[,] board)
+  {
+    int currentNumOfMovesLeft = 0;
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
         if (board[i, j] == PieceType.Empty)
-          return true;
-    return false;
+          currentNumOfMovesLeft++;
+    return currentNumOfMovesLeft;
   }
 
   static int Evaluate(PieceType[,] board)
@@ -66,12 +77,13 @@ static class BoardMoveHelper
     return 0;
   }
 
-  static int MiniMax(PieceType[,] board,int depth, bool isMax)
+  static int MiniMax(PieceType[,] board,int depth,int maxDepthToTraverse, bool isMax)
   {
     int score = Evaluate(board);
     if (score == 10) return score;
     if (score == -10) return score;
-    if (IsMovesLeft(board) == false) return 0;
+    int maxDepthAdjutedToMoves = NumOfMovesLeft(board) - maxDepthToTraverse;
+    if (IsMovesLeft(board) == false || depth >= maxDepthAdjutedToMoves ) return 0;
 
     if (isMax)
     {
@@ -83,7 +95,7 @@ static class BoardMoveHelper
           if (board[i, j] == PieceType.Empty)
           {
             board[i, j] = player1;
-            best = Math.Max(best, MiniMax(board,depth + 1, !isMax));
+            best = Math.Max(best, MiniMax(board,depth + 1, maxDepthToTraverse, !isMax));
             board[i, j] = PieceType.Empty;
           }
         }
@@ -101,7 +113,7 @@ static class BoardMoveHelper
           if (board[i, j] == PieceType.Empty)
           {
             board[i, j] = player2;
-            best = Math.Min(best, MiniMax(board,depth + 1, !isMax));
+            best = Math.Min(best, MiniMax(board,depth + 1, maxDepthToTraverse, !isMax));
             board[i, j] = PieceType.Empty;
           }
         }
@@ -110,7 +122,7 @@ static class BoardMoveHelper
     }
   }
 
-  static Move FindBestMove(PieceType[,] board)
+  static Move FindBestMove(PieceType[,] board,int maxDepth)
   {
     int bestVal = -1000;
     Move bestMove = new Move();
@@ -124,7 +136,7 @@ static class BoardMoveHelper
         if (board[i, j] == PieceType.Empty)
         {
           board[i, j] = player1;
-          int moveVal = MiniMax(board, 0, false);
+          int moveVal = MiniMax(board, 0, maxDepth, false);
           board[i, j] = PieceType.Empty;
 
           if (moveVal > bestVal)
@@ -139,14 +151,20 @@ static class BoardMoveHelper
     return bestMove;
   }
 
-  public static (int xIndex, int yIndex) GetBestMoveCoordinates(PieceType p1, PieceType p2 ,List<PieceType> currentBoardPieces)
+  public static (int xIndex, int yIndex) GetBestMoveCoordinates(PieceType p1, PieceType p2 ,List<PieceType> currentBoardPieces, int difficulty)
   {
     player1 = p1;
     player2 = p2;
     boardAsMatrix = new PieceType[3, 3];
     ConvertListToMatrix(currentBoardPieces);
-    Move bestMove = FindBestMove(boardAsMatrix);
+    Move bestMove = FindBestMove(boardAsMatrix, AdjustDifficultyToMaxDepth(difficulty));
     return (bestMove.col,bestMove.row);
+  }
+
+  static int AdjustDifficultyToMaxDepth(int difficulty)
+  {
+    bool isEasy = difficulty == 0;
+    return isEasy ? 5 : difficulty == 1 ? 3 : 0;
   }
 
   public static void ConvertListToMatrix(List<PieceType> board)

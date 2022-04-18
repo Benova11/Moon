@@ -37,7 +37,8 @@ public class GameManager : Singleton<GameManager>
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayGameMusic();
-    Invoke(nameof(SetGameActive), 0.5f);
+    //Invoke(nameof(SetGameActive), 0.5f);
+    SetGameActive();
     AdjustModeData();
   }
 
@@ -74,22 +75,24 @@ public class GameManager : Singleton<GameManager>
   {
     
     ResetTimer();
+    isPlayerTurnAvailable = false;
     if (!isWon)
     {
-      isPlayerTurnAvailable = false;
       if (SoundManager.Instance != null)
         SoundManager.Instance.PlayPiecePlacedSound();
-      SwitchPlayer();
       if(boardManager.NumOfEmptyTiles == 0)
       {
         OnDraw();
+        SwitchPlayer();
         return;
       }
       else if (gameMode == GameMode.PVC && !isBotTurn)
         StartCoroutine(PlayBotTurn(Random.Range(1f, 4f)));
-      else isPlayerTurnAvailable = true;
+      else
+        isPlayerTurnAvailable = true;
     }
     else OnWin();
+    SwitchPlayer();
   }
 
   IEnumerator SimulateComputerGame()
@@ -106,7 +109,7 @@ public class GameManager : Singleton<GameManager>
     yield return new WaitForSeconds(delay);
     //int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     //boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
-    (int xindex, int yIndex) nextMove = BoardMoveHelper.GetBestMoveCoordinates(1 - playerInPVCMode, playerInPVCMode, boardManager.CurrentBoardPiecesValues);
+    (int xindex, int yIndex) nextMove = BoardMoveHelper.GetBestMoveCoordinates(1 - playerInPVCMode, playerInPVCMode, boardManager.CurrentBoardPiecesValues,(int)gameDifficulty);
     int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
     boardManager.GenarateNextBoardPiece(listIndex, true);
     isPlayerTurnAvailable = true;
@@ -127,12 +130,7 @@ public class GameManager : Singleton<GameManager>
     AnimateWininigTriplate();
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    if(gameMode == GameMode.PVC && playerInPVCMode == currentPlayerType)
-      UIManager.Instance.OnEndOfGame("You Win", true);
-    else if (gameMode == GameMode.PVC )
-      UIManager.Instance.OnEndOfGame("You Lost", false);
-    else
-      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() +" wins", true);
+    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerType);
   }
 
   void OnTimesUp()
@@ -140,12 +138,7 @@ public class GameManager : Singleton<GameManager>
     OnGameEnded();
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    if (gameMode == GameMode.PVC && playerInPVCMode == currentPlayerType)
-      UIManager.Instance.OnEndOfGame("You Lost", true);
-    else if (gameMode == GameMode.PVC)
-      UIManager.Instance.OnEndOfGame("You Win", false);
-    else
-      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
+    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerType);
   }
 
   void OnDraw()
@@ -154,6 +147,19 @@ public class GameManager : Singleton<GameManager>
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayDrawSound();
     UIManager.Instance.OnEndOfGame("Draw", false);
+  }
+
+  void AdjustUIForEndGame(bool isPVCMode,bool isWinOnPVC)
+  {
+    if (isPVCMode)
+    {
+      if(!isWinOnPVC)
+        UIManager.Instance.OnEndOfGame("You Lost", false);
+      else
+        UIManager.Instance.OnEndOfGame("You Win", true);
+    }
+    else
+      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
   }
 
   void OnGameEnded()
@@ -176,20 +182,22 @@ public class GameManager : Singleton<GameManager>
 
   public void RestartGame()
   {
-    SwitchPlayer();
     isGameActive = false;
     currentTurnTimeRemaining = 5;
     boardManager.ClearBoard();
     UIManager.Instance.OnGameStarts();
+    AdjustGameSettingsOnRestart();
+    SetGameActive();
+  }
+
+  void AdjustGameSettingsOnRestart()
+  {
     if (gameMode != GameMode.PVC)
       AdjustModeData();
-    else if(isPlayerTurnAvailable)
-    {
-      currentPlayerType = 1 - currentPlayerType;
-      isPlayerTurnAvailable = false;
+    else if (currentPlayerType == PieceType.O)
       StartCoroutine(PlayBotTurn(Random.Range(1f, 3f)));
-    }
-    SetGameActive();
+    else
+      isPlayerTurnAvailable = true;
   }
 
   void AnimateWininigTriplate()

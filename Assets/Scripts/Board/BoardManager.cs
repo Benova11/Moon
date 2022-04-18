@@ -59,17 +59,6 @@ public class BoardManager : MonoBehaviour
     GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
   }
 
-  //todo maybe not in use
-  public void GenarateNextBoardPiece(int gridIndex, PieceType pieceType)
-  {
-    if (currentBoardPieces[gridIndex] != PieceType.Empty) return;
-
-    BoardPiece piecePrefabToInstantiate = pieceType == PieceType.X ? XPiecePrefab : OPiecePrefab;
-    currentBoardPieces[gridIndex] = CurrentPlayerPiece;
-    Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
-    lastMoves.Insert(0, gridIndex);
-  }
-
   public void SetPreMadeBoardPieces(List<PieceType> preMadeBoard)
   {
     currentBoardPieces = preMadeBoard;
