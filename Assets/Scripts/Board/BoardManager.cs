@@ -59,6 +59,13 @@ public class BoardManager : MonoBehaviour
     GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
   }
 
+  public void GenarateHintBoardPiece(int gridIndex)
+  {
+    BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
+    BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    boardPiece.OnPlacingPiece(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon,true);
+  }
+
   public void SetPreMadeBoardPieces(List<PieceType> preMadeBoard)
   {
     currentBoardPieces = preMadeBoard;

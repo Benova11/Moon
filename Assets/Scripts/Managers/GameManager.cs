@@ -124,6 +124,16 @@ public class GameManager : Singleton<GameManager>
     }
   }
 
+  public void UseHint()
+  {
+    if (isPlayerTurnAvailable)
+    {
+      (int xindex, int yIndex) nextMove = BoardMoveHelper.GetHint(playerInPVCMode, 1 - playerInPVCMode, boardManager.CurrentBoardPiecesValues);
+      int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
+      boardManager.GenarateHintBoardPiece(listIndex);
+    }
+  }
+
   void OnWin()
   {
     isPlayerTurnAvailable = true;

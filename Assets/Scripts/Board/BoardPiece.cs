@@ -16,10 +16,17 @@ public class BoardPiece : MonoBehaviour
     if (selectedIcon != null) icon.sprite = selectedIcon;
   }
 
-  public void OnPlacingPiece(Sprite selectedIcon)
+  public void OnPlacingPiece(Sprite selectedIcon, bool isHint = false)
   {
+    if (isHint)
+    {
+      icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 0.3f);
+      icon.gameObject.transform.LeanScale(new Vector3(1, 1, 1), appeareDuration * 1.5f).setLoopPingPong(3)
+        .setOnComplete(() => { Destroy(gameObject, 2); });
+    }
+    else
+      icon.gameObject.transform.LeanScale(new Vector3(1, 1, 1), appeareDuration).setEaseOutBounce();
     SetIconImage(selectedIcon);
-    icon.gameObject.transform.LeanScale(new Vector3(1, 1, 1), appeareDuration).setEaseOutBounce();
   }
 
   public void AnimateOnPartOfTriplet(float delay)

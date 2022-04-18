@@ -161,10 +161,20 @@ static class BoardMoveHelper
     return (bestMove.col,bestMove.row);
   }
 
+  public static (int xIndex, int yIndex) GetHint(PieceType p1, PieceType p2, List<PieceType> currentBoardPieces)
+  {
+    player1 = p1;
+    player2 = p2;
+    boardAsMatrix = new PieceType[3, 3];
+    ConvertListToMatrix(currentBoardPieces);
+    Move bestMove = FindBestMove(boardAsMatrix, AdjustDifficultyToMaxDepth(2));
+    return (bestMove.col, bestMove.row);
+  }
+
   static int AdjustDifficultyToMaxDepth(int difficulty)
   {
     bool isEasy = difficulty == 0;
-    return isEasy ? 5 : difficulty == 1 ? 3 : 0;
+    return isEasy ? 5 : difficulty == 1 ? 3 : 1;
   }
 
   public static void ConvertListToMatrix(List<PieceType> board)
