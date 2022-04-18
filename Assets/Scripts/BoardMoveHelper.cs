@@ -11,19 +11,11 @@ static class BoardMoveHelper
   static PieceType player1, player2;
   static PieceType[,] boardAsMatrix;
 
-  static bool IsMovesLeft(PieceType[,] board)
-  {
-    //for (int i = 0; i < 3; i++)
-    //  for (int j = 0; j < 3; j++)
-    //    if (board[i, j] == PieceType.Empty)
-    //      return true;
-    //return false;
-    return NumOfMovesLeft(board) > 0;
-  }
+  static bool IsMovesLeft(PieceType[,] board) => NumOfMovesLeft(board) > 0;
 
   static int NumOfMovesLeft(PieceType[,] board)
   {
-    int currentNumOfMovesLeft = 0;
+    int currentNumOfMovesLeft = 1;
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
         if (board[i, j] == PieceType.Empty)
@@ -83,7 +75,7 @@ static class BoardMoveHelper
     if (score == 10) return score;
     if (score == -10) return score;
     int maxDepthAdjutedToMoves = NumOfMovesLeft(board) - maxDepthToTraverse;
-    if (IsMovesLeft(board) == false || depth >= maxDepthAdjutedToMoves ) return 0;
+    if (IsMovesLeft(board) == false || depth > maxDepthAdjutedToMoves ) return 0;
 
     if (isMax)
     {
@@ -174,7 +166,7 @@ static class BoardMoveHelper
   static int AdjustDifficultyToMaxDepth(int difficulty)
   {
     bool isEasy = difficulty == 0;
-    return isEasy ? 5 : difficulty == 1 ? 3 : 1;
+    return isEasy ? 5 : difficulty == 1 ? 3 : 0;
   }
 
   public static void ConvertListToMatrix(List<PieceType> board)

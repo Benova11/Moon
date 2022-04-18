@@ -9,8 +9,8 @@ public class BoardManager : MonoBehaviour
 
   List<int> lastMoves;
   List<PieceType> currentBoardPieces;
-  //PieceType currentPlayerPiece;
   PieceType playerInPVCMode;
+  BoardPiece hintPiece;
   public (int first, int second, int third) winningTriplet;
 
   public PieceType CurrentPlayerPiece { get { return  GameManager.Instance.currentPlayerType; } }
@@ -37,7 +37,7 @@ public class BoardManager : MonoBehaviour
   void InitCurrentBoardPiecesList()
   {
     currentBoardPieces = new List<PieceType>();
-    for(int i=0; i<9; i++)
+    for(int i = 0; i < 9; i++)
       currentBoardPieces.Add(PieceType.Empty);
   }
 
@@ -46,24 +46,35 @@ public class BoardManager : MonoBehaviour
     playerInPVCMode = pieceType;
   }
 
-  public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
+  public void GenarateNextBoardPiece(int listIndex,bool isBot = false)
   {
     if (!isBot && !GameManager.Instance.IsPlayerTurnAvailable) return;
-    if (currentBoardPieces[gridIndex] != PieceType.Empty) return;
-
+    if (currentBoardPieces[listIndex] != PieceType.Empty) return;
     BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
-    currentBoardPieces[gridIndex] = CurrentPlayerPiece;
-    BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
+    currentBoardPieces[listIndex] = CurrentPlayerPiece;
+    BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(listIndex));
     boardPiece.OnPlacingPiece(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon);
-    lastMoves.Insert(0, gridIndex);
+    lastMoves.Insert(0, listIndex);
     GameManager.Instance.OnBoardMove(IsBoardOnWinState(), isBot);
+    if (GetBoardPieceObject(listIndex) != null && GetBoardPieceObject(listIndex).IsHint)
+    {
+      Destroy(hintPiece.gameObject);
+      hintPiece = null;
+    }
   }
 
-  public void GenarateHintBoardPiece(int gridIndex)
+  public int GenarateHintBoardPiece()
   {
-    BoardPiece piecePrefabToInstantiate = CurrentPlayerPiece == PieceType.X ? XPiecePrefab : OPiecePrefab;
-    BoardPiece boardPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(gridIndex));
-    boardPiece.OnPlacingPiece(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon,true);
+    if (hintPiece != null) return -1;
+    (int xindex, int yIndex) nextMove = BoardMoveHelper.GetHint(playerInPVCMode, 1 - playerInPVCMode, CurrentBoardPiecesValues);
+    int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
+    BoardPiece piecePrefabToInstantiate = PlayerInPVCMode == PieceType.X ? XPiecePrefab : OPiecePrefab;
+    if(piecePrefabToInstantiate != null)
+    {
+      hintPiece = Instantiate(piecePrefabToInstantiate, boardContainer.transform.GetChild(listIndex));
+      hintPiece.OnPlacingPiece(CurrentPlayerPiece == PieceType.O ? GameManager.Instance.oPlayerIcon : GameManager.Instance.xPlayerIcon,true);
+    }
+    return listIndex;
   }
 
   public void SetPreMadeBoardPieces(List<PieceType> preMadeBoard)
@@ -205,5 +216,16 @@ public class BoardManager : MonoBehaviour
   {
     return boardContainer.transform.GetChild(index).GetChild(0)
             .gameObject.GetComponent<BoardPiece>();
+  }
+
+  public List<int> GetCurrentEmptyTilesIndexs()
+  {
+    List<int> currentEmptyTilesIndexs = new List<int>();
+    for(int i=0; i< currentBoardPieces.Count;i++)
+    {
+      if (currentBoardPieces[i] == PieceType.Empty)
+        currentEmptyTilesIndexs.Add(i);
+    }
+    return currentEmptyTilesIndexs;
   }
 }

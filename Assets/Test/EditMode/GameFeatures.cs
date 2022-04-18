@@ -45,6 +45,19 @@ namespace Tests
       Assert.AreEqual(expectedUndoPieceTypeList, boardManager.CurrentBoardPiecesValues);
     }
 
+    [Test]
+    public void TestHint()
+    {
+      var gameObject = new GameObject();
+      var boardManager = gameObject.AddComponent<BoardManager>();
+      boardManager.SetPreMadeBoardPieces(new List<PieceType> { PieceType.X, PieceType.O, PieceType.X, PieceType.O, PieceType.X, PieceType.O, PieceType.Empty, PieceType.Empty, PieceType.Empty });
+      boardManager.SetPVCPlayerType(PieceType.X);
+      int hintIndex = boardManager.GenarateHintBoardPiece();
+      List<int> currentEmptyTilesIndexs = boardManager.GetCurrentEmptyTilesIndexs();
+      bool isHintIndexLegal = currentEmptyTilesIndexs.Contains(hintIndex) && boardManager.NumOfEmptyTiles != 0;
+      Assert.AreEqual(isHintIndexLegal, true);
+    }
+
     bool IsBoardWinCondition(GameObject newGameObject)
     {
       var gameObject = newGameObject;

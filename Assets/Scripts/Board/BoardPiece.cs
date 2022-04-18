@@ -6,6 +6,9 @@ public class BoardPiece : MonoBehaviour
   [SerializeField] Image icon;
   [SerializeField] float appeareDuration = 0.4f;
 
+  public bool IsHint { get { return isHint; } }
+  bool isHint = false;
+
   void Awake()
   {
     icon.gameObject.transform.localScale = new Vector3(0, 0, 0);
@@ -20,6 +23,7 @@ public class BoardPiece : MonoBehaviour
   {
     if (isHint)
     {
+      isHint = true;
       icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 0.3f);
       icon.gameObject.transform.LeanScale(new Vector3(1, 1, 1), appeareDuration * 1.5f).setLoopPingPong(3)
         .setOnComplete(() => { Destroy(gameObject, 2); });
