@@ -72,21 +72,24 @@ public class GameManager : Singleton<GameManager>
 
   public void OnBoardMove(bool isWon = false,bool isBotTurn = false)
   {
+    
     ResetTimer();
-    if (!isWon && boardManager.NumOfEmptyTiles != 0)
+    if (!isWon)
     {
       isPlayerTurnAvailable = false;
       if (SoundManager.Instance != null)
         SoundManager.Instance.PlayPiecePlacedSound();
       SwitchPlayer();
-      if (gameMode == GameMode.PVC && !isBotTurn)
+      if(boardManager.NumOfEmptyTiles == 0)
       {
-        Invoke(nameof(PlayBotTurn), Random.Range(1f, 5f));
-      }else isPlayerTurnAvailable = true;
+        OnDraw();
+        return;
+      }
+      else if (gameMode == GameMode.PVC && !isBotTurn)
+        StartCoroutine(PlayBotTurn(Random.Range(1f, 4f)));
+      else isPlayerTurnAvailable = true;
     }
-    else if (boardManager.NumOfEmptyTiles != 0)
-      OnWin();
-    else OnDraw();
+    else OnWin();
   }
 
   IEnumerator SimulateComputerGame()
@@ -94,14 +97,18 @@ public class GameManager : Singleton<GameManager>
     while(boardManager.NumOfEmptyTiles != 0 || IsGameActive)
     {
       yield return new WaitForSeconds(Random.Range(1f, 4f));
-      PlayBotTurn();
+      StartCoroutine(PlayBotTurn());
     }
   }
 
-  void PlayBotTurn()
+  IEnumerator PlayBotTurn(float delay = 0)
   {
-    int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
-    boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+    yield return new WaitForSeconds(delay);
+    //int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
+    //boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+    (int xindex, int yIndex) nextMove = BoardMoveHelper.GetBestMoveCoordinates(1 - playerInPVCMode, playerInPVCMode, boardManager.CurrentBoardPiecesValues);
+    int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
+    boardManager.GenarateNextBoardPiece(listIndex, true);
     isPlayerTurnAvailable = true;
   }
 
@@ -173,9 +180,15 @@ public class GameManager : Singleton<GameManager>
     isGameActive = false;
     currentTurnTimeRemaining = 5;
     boardManager.ClearBoard();
-    boardManager.SetCurrentPlayerType(currentPlayerType);
     UIManager.Instance.OnGameStarts();
-    AdjustModeData();
+    if (gameMode != GameMode.PVC)
+      AdjustModeData();
+    else if(isPlayerTurnAvailable)
+    {
+      currentPlayerType = 1 - currentPlayerType;
+      isPlayerTurnAvailable = false;
+      StartCoroutine(PlayBotTurn(Random.Range(1f, 3f)));
+    }
     SetGameActive();
   }
 

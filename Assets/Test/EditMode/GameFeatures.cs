@@ -29,8 +29,8 @@ namespace Tests
       var gameObject = new GameObject();
       bool isBoardWinCondition = IsBoardWinCondition(gameObject);
       BoardManager boardManager = gameObject.GetComponent <BoardManager>();
-      boardManager.SetCurrentPlayerType(PieceType.O);
-      bool isLost = isBoardWinCondition && (int)boardManager.CurrentPlayerPiece != boardManager.winningTriplet.first;
+      boardManager.SetPVCPlayerType(PieceType.O);
+      bool isLost = isBoardWinCondition && (int)boardManager.PlayerInPVCMode != boardManager.winningTriplet.first;
       Assert.AreEqual(isLost, true);
     }
 

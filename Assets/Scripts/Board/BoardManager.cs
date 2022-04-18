@@ -9,11 +9,12 @@ public class BoardManager : MonoBehaviour
 
   List<int> lastMoves;
   List<PieceType> currentBoardPieces;
-  PieceType currentPlayerPiece;
+  //PieceType currentPlayerPiece;
+  PieceType playerInPVCMode;
   public (int first, int second, int third) winningTriplet;
 
-  public PieceType CurrentPlayerPiece { get { return  currentPlayerPiece; } }
-  public PieceType PlayerInPVCMode { get { return GameManager.Instance.playerInPVCMode; } }
+  public PieceType CurrentPlayerPiece { get { return  GameManager.Instance.currentPlayerType; } }
+  public PieceType PlayerInPVCMode { get { return playerInPVCMode; } }
   public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
   public List<BoardPiece> boardPieces;
   public int NumOfEmptyTiles
@@ -28,7 +29,7 @@ public class BoardManager : MonoBehaviour
 
   public void InitBoard(PieceType firstPlayerType)
   {
-    currentPlayerPiece = firstPlayerType;
+    playerInPVCMode = firstPlayerType;
     InitCurrentBoardPiecesList();
     lastMoves = new List<int>();
   }
@@ -40,9 +41,9 @@ public class BoardManager : MonoBehaviour
       currentBoardPieces.Add(PieceType.Empty);
   }
 
-  public void SetCurrentPlayerType(PieceType pieceType)
+  public void SetPVCPlayerType(PieceType pieceType)
   {
-    currentPlayerPiece = pieceType;
+    playerInPVCMode = pieceType;
   }
 
   public void GenarateNextBoardPiece(int gridIndex,bool isBot = false)
