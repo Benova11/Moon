@@ -2,7 +2,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UIManager : Singleton<UIManager>
+public class UIManager : UISingleton<UIManager>
 {
   [SerializeField] TextMeshProUGUI timerText;
   [SerializeField] TextMeshProUGUI endGameStatusText;
@@ -31,6 +31,8 @@ public class UIManager : Singleton<UIManager>
 
   public void OnEndOfGame(string endOfGameMsg, bool isWin)
   {
+    if(isWin) SoundManager.Instance.PlayWinSound();
+    else SoundManager.Instance.PlayDrawSound();
     timerAnimator.SetBool("TimerRuns", false);
     endGameStatusText.text = endOfGameMsg;
     endGameCoroutine = StartCoroutine(OnEndOfGameRoutine(isWin));

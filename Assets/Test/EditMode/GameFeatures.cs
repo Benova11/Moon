@@ -30,7 +30,7 @@ namespace Tests
       bool isBoardWinCondition = IsBoardWinCondition(gameObject);
       BoardManager boardManager = gameObject.GetComponent <BoardManager>();
       boardManager.SetPVCPlayerType(PieceType.O);
-      bool isLost = isBoardWinCondition && (int)boardManager.PlayerInPVCMode != boardManager.winningTriplet.first;
+      bool isLost = isBoardWinCondition && (int)boardManager.PlayerInPVCMode != boardManager.WinningTriplet.first;
       Assert.AreEqual(isLost, true);
     }
 

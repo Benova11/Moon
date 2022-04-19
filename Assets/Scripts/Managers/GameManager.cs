@@ -1,28 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum GameMode { PVP, PVC, CVC }
 public enum PieceType { X, O, Empty }
 public enum Difficulty { Easy, Medium, Hard}
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : UISingleton<GameManager>
 {
-  [SerializeField] float turnTimeInterval;
+  [SerializeField] float turnTimeInterval = 5;
   bool isGameActive = false;
   bool isPlayerTurnAvailable = true;
-  float currentTurnTimeRemaining = 5;
+  float currentTurnTimeRemaining;
+
+  [SerializeField] BoardManager boardManager;
+  GameMode gameMode;
+  Difficulty gameDifficulty;
+  PieceType playerInPVCMode;
+  PieceType currentPlayerTypePiece = PieceType.X;
 
   Coroutine CVCCoroutine;
-  public GameMode gameMode;
-  public PieceType firstPlayerPiece;
-  public PieceType secondPlayerPiece;
-  public PieceType playerInPVCMode;
+  PieceType firstPlayerPiece;
+  PieceType secondPlayerPiece;
 
-  public PieceType currentPlayerTypePiece = PieceType.X;
-  public Difficulty gameDifficulty;
-  public BoardManager boardManager;
+  public GameMode CurrentGameMode { get { return gameMode; } }
+  public PieceType CurrentPlayerTypePiece { get { return currentPlayerTypePiece; } }
+  public BoardManager CurrentBoardManager { get { return boardManager; } }
+
   public bool IsGameActive { get { return isGameActive; } }
   public bool IsPlayerTurnAvailable { get { return isPlayerTurnAvailable; } }
 
@@ -39,8 +45,7 @@ public class GameManager : Singleton<GameManager>
     ResetTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
     if (SoundManager.Instance != null)
-      SoundManager.Instance.PlayGameMusic();
-    //Invoke(nameof(SetGameActive), 0.5f);
+      SoundManager.Instance.SwitchMainMusic(true);
     SetGameActive();
     AdjustModeData();
   }
@@ -84,11 +89,11 @@ public class GameManager : Singleton<GameManager>
   {
     ResetTimer();
     isPlayerTurnAvailable = false;
+    if (SoundManager.Instance != null)
+      SoundManager.Instance.PlayPiecePlacedSound();
     if (!isWon)
     {
       SwitchNextMovePiece();
-      if (SoundManager.Instance != null)
-        SoundManager.Instance.PlayPiecePlacedSound();
       if(boardManager.NumOfEmptyTiles == 0)
       {
         OnDraw();
@@ -114,26 +119,31 @@ public class GameManager : Singleton<GameManager>
   IEnumerator PlayBotTurn(float delay = 0, int botDescitionFactor = 10)
   {
     yield return new WaitForSeconds(delay);
-    (int xindex, int yIndex) nextMove;
 
     //int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     //boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
 
     if (GetBotActionFactorByDifficulty() < 70)
-    {
-      //Debug.Log("random");
-      List<int> emptyIndexs = boardManager.GetCurrentEmptyTilesIndexs();
-      int indexToPlayOn = emptyIndexs[Random.Range(0, emptyIndexs.Count)];
-      boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
-    }
+      PlayBotRandomMove();
     else
-    {
-      //Debug.Log("AI");
-      nextMove = BoardMoveHelper.GetBestMoveCoordinates(currentPlayerTypePiece, 1-currentPlayerTypePiece, boardManager.CurrentBoardPiecesValues, gameMode == GameMode.CVC ? 1 : (int)gameDifficulty);
-      int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
-      boardManager.GenarateNextBoardPiece(listIndex, true);
-  }
+      PlayBotBestMove();
+
      isPlayerTurnAvailable = true;
+  }
+
+  void PlayBotRandomMove()
+  {
+    List<int> emptyIndexs = boardManager.GetCurrentEmptyTilesIndexs();
+    int indexToPlayOn = emptyIndexs[Random.Range(0, emptyIndexs.Count)];
+    boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+  }
+
+  void PlayBotBestMove()
+  {
+    (int xindex, int yIndex) nextMove;
+    nextMove = BoardMoveHelper.GetBestMoveCoordinates(currentPlayerTypePiece, 1 - currentPlayerTypePiece, boardManager.CurrentBoardPiecesValues, gameMode == GameMode.CVC ? 1 : (int)gameDifficulty);
+    int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
+    boardManager.GenarateNextBoardPiece(listIndex, true);
   }
 
   int GetBotActionFactorByDifficulty()
@@ -152,7 +162,6 @@ public class GameManager : Singleton<GameManager>
         break;
 
     }
-    //Debug.Log(botFactor);
     return botFactor;
   }
 
@@ -175,24 +184,18 @@ public class GameManager : Singleton<GameManager>
   {
     OnGameEnded();
     AnimateWininigTriplate();
-    if (SoundManager.Instance != null)
-      SoundManager.Instance.PlayWinSound();
     AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerTypePiece);
   }
 
   void OnTimesUp()
   {
     OnGameEnded();
-    if (SoundManager.Instance != null)
-      SoundManager.Instance.PlayWinSound();
     AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerTypePiece);
   }
 
   void OnDraw()
   {
     OnGameEnded();
-    if (SoundManager.Instance != null)
-      SoundManager.Instance.PlayDrawSound();
     UIManager.Instance.OnEndOfGame("Draw", false);
   }
 
@@ -254,25 +257,33 @@ public class GameManager : Singleton<GameManager>
         StartCoroutine(PlayBotTurn(Random.Range(1f, 4f)));
       }
     }
-
-    if (gameMode == GameMode.CVC)
+    else if (gameMode == GameMode.CVC)
       CVCCoroutine = StartCoroutine(SimulateComputerGame());
+    else
+      isPlayerTurnAvailable = true;
   }
-
-  bool IsBotFirstTurn() => boardManager.NumOfEmptyTiles >= 8;
 
   void AnimateWininigTriplate()
   {
-    if (boardManager.winningTriplet == (-1, -1, -1)) return;
-    List<int> winningTripletIndexs = new List<int> { boardManager.winningTriplet.first, boardManager.winningTriplet.second, boardManager.winningTriplet.third };
+    if (boardManager.WinningTriplet == (-1, -1, -1)) return;
+    List<int> winningTripletIndexs = new List<int> { boardManager.WinningTriplet.first, boardManager.WinningTriplet.second, boardManager.WinningTriplet.third };
     winningTripletIndexs.Sort();
-    boardManager.GetBoardPieceObject(boardManager.winningTriplet.first).AnimateOnPartOfTriplet(0);
-    boardManager.GetBoardPieceObject(boardManager.winningTriplet.second).AnimateOnPartOfTriplet(0.15f);
-    boardManager.GetBoardPieceObject(boardManager.winningTriplet.third).AnimateOnPartOfTriplet(0.3f);
+    boardManager.GetBoardPieceObject(boardManager.WinningTriplet.first).AnimateOnPartOfTriplet(0);
+    boardManager.GetBoardPieceObject(boardManager.WinningTriplet.second).AnimateOnPartOfTriplet(0.15f);
+    boardManager.GetBoardPieceObject(boardManager.WinningTriplet.third).AnimateOnPartOfTriplet(0.3f);
   }
 
   void SetGameActive()
   {
     isGameActive = true;
+  }
+
+  public void GoBackToMainMenu()
+  {
+    OnGameEnded();
+    boardManager.ClearBoard();
+    if (SoundManager.Instance != null)
+      SoundManager.Instance.SwitchMainMusic(false);
+    SceneManager.UnloadSceneAsync("Game");
   }
 }

@@ -6,8 +6,9 @@ public class BoardPiece : MonoBehaviour
   [SerializeField] Image icon;
   [SerializeField] float appeareDuration = 0.4f;
 
-  public bool IsHint { get { return isHint; } }
   bool isHint = false;
+
+  public bool IsHint { get { return isHint; } }
 
   void Awake()
   {

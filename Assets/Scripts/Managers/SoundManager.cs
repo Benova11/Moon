@@ -6,6 +6,7 @@ public class SoundManager : Singleton<SoundManager>
   [SerializeField] AudioSource soundsSource;
 
   [SerializeField] AudioClip gameplayMusicClip;
+  [SerializeField] AudioClip mainMenuMusicClip;
   [SerializeField] AudioClip clickClip;
   [SerializeField] AudioClip piecePlacedClip;
   [SerializeField] AudioClip winClip;
@@ -26,14 +27,14 @@ public class SoundManager : Singleton<SoundManager>
     soundsSource.mute = sfxState == 1 ? false : true;
   }
 
-  public void PlayGameMusic()
+  public void SwitchMainMusic(bool switchToGame)
   {
     LeanTween.value(bgMusicVolume, 0, 1)
       .setOnUpdate(SetBgMusicVolume)
       .setOnComplete(() =>
       {
         bgMusicSource.Stop();
-        bgMusicSource.clip = gameplayMusicClip;
+        bgMusicSource.clip = switchToGame ? gameplayMusicClip : mainMenuMusicClip;
         bgMusicSource.Play();
         LeanTween.value(0, bgMusicVolume, 1f)
         .setOnUpdate(SetBgMusicVolume);
@@ -64,5 +65,4 @@ public class SoundManager : Singleton<SoundManager>
   {
     soundsSource.PlayOneShot(drawClip);
   }
-
 }

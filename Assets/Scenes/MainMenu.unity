@@ -1533,6 +1533,7 @@ MonoBehaviour:
   bgMusicSource: {fileID: 1091132915}
   soundsSource: {fileID: 1091132916}
   gameplayMusicClip: {fileID: 8300000, guid: 588924444dceb4dad8c679c3738ac7e0, type: 3}
+  mainMenuMusicClip: {fileID: 8300000, guid: ff4bdfef25c65474dbdad5db1228fd6e, type: 3}
   clickClip: {fileID: 8300000, guid: 578ecb7a698494421aaa034aa7914abe, type: 3}
   piecePlacedClip: {fileID: 8300000, guid: bf5574056362044199def6f2a4a50e8f, type: 3}
   winClip: {fileID: 8300000, guid: c549e3b0472a043ba82c6257cb4fdb2b, type: 3}
@@ -2715,8 +2716,8 @@ Canvas:
   m_GameObject: {fileID: 1781873199}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

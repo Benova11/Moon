@@ -2,17 +2,17 @@
 
 public class BoardTile : MonoBehaviour
 {
-  public int gridIndex;
+  [SerializeField] int listIndex;
 
   public void OnTileClicked()
   {
-    if(GameManager.Instance.gameMode != GameMode.CVC)
+    if(GameManager.Instance.CurrentGameMode != GameMode.CVC)
       PlaceBoardPiece();
   }
 
   void PlaceBoardPiece()
   {
     if(GameManager.Instance.IsGameActive)
-      GameManager.Instance.boardManager.GenarateNextBoardPiece(gridIndex);
+      GameManager.Instance.CurrentBoardManager.GenarateNextBoardPiece(listIndex);
   }
 }

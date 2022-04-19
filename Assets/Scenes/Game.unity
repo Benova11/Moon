@@ -243,6 +243,11 @@ PrefabInstance:
       propertyPath: gridIndex
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
@@ -285,11 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b31d757a2e5b34dff8501c7a00d9a355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnTimeInterval: 10
-  gameMode: 2
-  currentPlayerType: 0
-  playerInPVCMode: 0
-  gameDifficulty: 0
+  turnTimeInterval: 5
   boardManager: {fileID: 674002849}
   gameBg: {fileID: 1856455029}
   xPlayerIcon: {fileID: 21300000, guid: 5e8278e012ff04d9a8bbd92350645568, type: 3}
@@ -476,6 +477,11 @@ PrefabInstance:
     - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: gridIndex
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
@@ -876,6 +882,11 @@ PrefabInstance:
       propertyPath: gridIndex
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
@@ -1014,6 +1025,11 @@ PrefabInstance:
     - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: gridIndex
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
@@ -1156,6 +1172,11 @@ PrefabInstance:
       propertyPath: gridIndex
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
@@ -1221,7 +1242,6 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
-  - component: {fileID: 519420029}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1229,14 +1249,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &519420029
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1365,7 +1377,6 @@ MonoBehaviour:
   OPiecePrefab: {fileID: 7491415684729129954, guid: b386664cbe99b4456a1c163d536ef4f5,
     type: 3}
   boardContainer: {fileID: 674002846}
-  boardPieces: []
 --- !u!1001 &722700257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1483,6 +1494,11 @@ PrefabInstance:
       propertyPath: gridIndex
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
@@ -1532,7 +1548,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -782, y: -77}
+  m_AnchoredPosition: {x: -807, y: -77}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &807210529
@@ -1718,6 +1734,11 @@ PrefabInstance:
       propertyPath: gridIndex
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: m_Name
@@ -1766,7 +1787,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -776, y: -854}
+  m_AnchoredPosition: {x: -859, y: -854}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1098268673
@@ -1980,6 +2001,11 @@ PrefabInstance:
     - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
         type: 3}
       propertyPath: gridIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7827592339823961976, guid: cdf40bd282eea428bb213e05049eae03,
+        type: 3}
+      propertyPath: listIndex
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8076422954941001932, guid: cdf40bd282eea428bb213e05049eae03,
@@ -2246,8 +2272,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -153, y: -852}
-  m_SizeDelta: {x: 210, y: 155}
+  m_AnchoredPosition: {x: 858, y: -846}
+  m_SizeDelta: {x: 190, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1614623992
 MonoBehaviour:
@@ -2291,7 +2317,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1614623993}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 104109908}
+        m_MethodName: GoBackToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1614623993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2311,7 +2348,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7adc6930e44a4f9c9266227fbf39624, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4cd51413d819b46a481d1a6073560d07, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2614,7 +2651,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &1781873203
 RectTransform:
@@ -2748,8 +2785,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -369, y: -852}
-  m_SizeDelta: {x: 210, y: 155}
+  m_AnchoredPosition: {x: -457.8, y: -855.8}
+  m_SizeDelta: {x: 195, y: 176.48166}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1901859778
 MonoBehaviour:
@@ -2824,7 +2861,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7adc6930e44a4f9c9266227fbf39624, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c31d0b4542f1348fbad717e78b461d0c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2877,7 +2914,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -587, y: -852}
+  m_AnchoredPosition: {x: -670, y: -852}
   m_SizeDelta: {x: 210, y: 155}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1938203924
@@ -3227,7 +3264,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0

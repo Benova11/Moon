@@ -11,12 +11,13 @@ public class BoardManager : MonoBehaviour
   List<PieceType> currentBoardPieces;
   PieceType playerInPVCMode;
   BoardPiece hintPiece;
-  public (int first, int second, int third) winningTriplet;
+  (int first, int second, int third) winningTriplet;
 
-  public PieceType CurrentPlayerPiece { get { return  GameManager.Instance.currentPlayerTypePiece; } }
+  public PieceType CurrentPlayerPiece { get { return GameManager.Instance.CurrentPlayerTypePiece; } }
   public PieceType PlayerInPVCMode { get { return playerInPVCMode; } }
   public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
-  public List<BoardPiece> boardPieces;
+  public (int first, int second, int third) WinningTriplet { get { return winningTriplet; } }
+
   public int NumOfEmptyTiles
   {
     get {
