@@ -16,10 +16,11 @@ public class GameManager : Singleton<GameManager>
 
   Coroutine CVCCoroutine;
   public GameMode gameMode;
-  public PieceType firstPlayer;
-  public PieceType secondPlayer;
-  public PieceType currentPlayerType = PieceType.X;
-  public PieceType playerInPVCMode = PieceType.X;
+  public PieceType firstPlayerPiece;
+  public PieceType secondPlayerPiece;
+  public PieceType playerInPVCMode;
+
+  public PieceType currentPlayerTypePiece = PieceType.X;
   public Difficulty gameDifficulty;
   public BoardManager boardManager;
   public bool IsGameActive { get { return isGameActive; } }
@@ -33,10 +34,7 @@ public class GameManager : Singleton<GameManager>
   {
     gameMode = selectedGameMode;
     gameDifficulty = selectedDifficulty;
-    firstPlayer = currentPlayerType;
-    secondPlayer = 1 - currentPlayerType;
-    //firstMovePlayer = currentPlayerType;
-    boardManager.InitBoard(currentPlayerType);
+    boardManager.InitBoard(currentPlayerTypePiece);
     UIManager.Instance.OnGameStarts();
     ResetTimer();
     SetGameSkin(selectedXIcon, selectedOIcon, selectedBg);
@@ -45,6 +43,13 @@ public class GameManager : Singleton<GameManager>
     //Invoke(nameof(SetGameActive), 0.5f);
     SetGameActive();
     AdjustModeData();
+  }
+
+  void InitPlayerData()
+  {
+    firstPlayerPiece = currentPlayerTypePiece;
+    secondPlayerPiece = 1 - currentPlayerTypePiece;
+    playerInPVCMode = currentPlayerTypePiece;
   }
 
   void LateUpdate()
@@ -60,10 +65,9 @@ public class GameManager : Singleton<GameManager>
 
   void AdjustModeData()
   {
+    InitPlayerData();
     if (gameMode == GameMode.CVC)
       CVCCoroutine = StartCoroutine(SimulateComputerGame());
-    else if (gameMode == GameMode.PVC)
-      playerInPVCMode = currentPlayerType;
   }
 
   void SetGameSkin(Sprite selectedXIcon, Sprite selectedOIcon, Sprite selectedBg)
@@ -78,7 +82,6 @@ public class GameManager : Singleton<GameManager>
 
   public void OnBoardMove(bool isWon = false,bool isBotTurn = false)
   {
-    
     ResetTimer();
     isPlayerTurnAvailable = false;
     if (!isWon)
@@ -89,7 +92,6 @@ public class GameManager : Singleton<GameManager>
       if(boardManager.NumOfEmptyTiles == 0)
       {
         OnDraw();
-        //SwitchPlayer();
         return;
       }
       else if (gameMode == GameMode.PVC && !isBotTurn)
@@ -98,31 +100,60 @@ public class GameManager : Singleton<GameManager>
         isPlayerTurnAvailable = true;
     }
     else OnWin();
-    //SwitchPlayer();
   }
 
   IEnumerator SimulateComputerGame()
   {
-    while(boardManager.NumOfEmptyTiles != 0 || IsGameActive)
+    while (boardManager.NumOfEmptyTiles != 0 || IsGameActive)
     {
       yield return new WaitForSeconds(Random.Range(1f, 4f));
-      StartCoroutine(PlayBotTurn());
+      StartCoroutine(PlayBotTurn(0));
     }
   }
 
-  IEnumerator PlayBotTurn(float delay = 0)
+  IEnumerator PlayBotTurn(float delay = 0, int botDescitionFactor = 10)
   {
     yield return new WaitForSeconds(delay);
     (int xindex, int yIndex) nextMove;
+
     //int indexToPlayOn = boardManager.CurrentBoardPiecesValues.FindIndex(pieceType => pieceType == PieceType.Empty);
     //boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
-    //if (gameMode == GameMode.PVC)
-    //  nextMove = BoardMoveHelper.GetBestMoveCoordinates(1 - playerInPVCMode, playerInPVCMode, boardManager.CurrentBoardPiecesValues,(int)gameDifficulty);
-    //else
-    nextMove = BoardMoveHelper.GetBestMoveCoordinates(currentPlayerType, 1-currentPlayerType, boardManager.CurrentBoardPiecesValues, (int)gameDifficulty);
-    int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
-    boardManager.GenarateNextBoardPiece(listIndex, true);
-    isPlayerTurnAvailable = true;
+
+    if (GetBotActionFactorByDifficulty() < 70)
+    {
+      //Debug.Log("random");
+      List<int> emptyIndexs = boardManager.GetCurrentEmptyTilesIndexs();
+      int indexToPlayOn = emptyIndexs[Random.Range(0, emptyIndexs.Count)];
+      boardManager.GenarateNextBoardPiece(indexToPlayOn, true);
+    }
+    else
+    {
+      //Debug.Log("AI");
+      nextMove = BoardMoveHelper.GetBestMoveCoordinates(currentPlayerTypePiece, 1-currentPlayerTypePiece, boardManager.CurrentBoardPiecesValues, gameMode == GameMode.CVC ? 1 : (int)gameDifficulty);
+      int listIndex = nextMove.yIndex * 3 + nextMove.xindex;
+      boardManager.GenarateNextBoardPiece(listIndex, true);
+  }
+     isPlayerTurnAvailable = true;
+  }
+
+  int GetBotActionFactorByDifficulty()
+  {
+    int botFactor = 0;
+    switch (gameDifficulty)
+    {
+      case Difficulty.Easy:
+        botFactor = Random.Range(0, 75);
+        break;
+      case Difficulty.Medium:
+        botFactor = Random.Range(60, 90);
+        break;
+      case Difficulty.Hard:
+        botFactor = Random.Range(68, 100);
+        break;
+
+    }
+    //Debug.Log(botFactor);
+    return botFactor;
   }
 
   public void UndoLastTurn()
@@ -142,12 +173,11 @@ public class GameManager : Singleton<GameManager>
 
   void OnWin()
   {
-    isPlayerTurnAvailable = true;
     OnGameEnded();
     AnimateWininigTriplate();
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerType);
+    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerTypePiece);
   }
 
   void OnTimesUp()
@@ -155,7 +185,7 @@ public class GameManager : Singleton<GameManager>
     OnGameEnded();
     if (SoundManager.Instance != null)
       SoundManager.Instance.PlayWinSound();
-    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerType);
+    AdjustUIForEndGame(gameMode == GameMode.PVC, playerInPVCMode == currentPlayerTypePiece);
   }
 
   void OnDraw()
@@ -176,11 +206,12 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.OnEndOfGame("You Win", true);
     }
     else
-      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerType + 1).ToString() + " wins", true);
+      UIManager.Instance.OnEndOfGame("Player " + ((int)currentPlayerTypePiece + 1).ToString() + " wins", true);
   }
 
   void OnGameEnded()
   {
+    isPlayerTurnAvailable = false;
     isGameActive = false;
     currentTurnTimeRemaining = 0;
     if (CVCCoroutine != null)
@@ -189,7 +220,7 @@ public class GameManager : Singleton<GameManager>
 
   void SwitchNextMovePiece()
   {
-    currentPlayerType = (PieceType)(1 - (int)currentPlayerType);
+    currentPlayerTypePiece = (PieceType)(1 - (int)currentPlayerTypePiece);
   }
 
   void ResetTimer()
@@ -209,20 +240,26 @@ public class GameManager : Singleton<GameManager>
 
   void AdjustGameSettingsOnRestart()
   {
-    secondPlayer = firstPlayer;
-    firstPlayer = 1 - currentPlayerType;
-    currentPlayerType = secondPlayer;
-    //if (currentPlayerType == firstMovePlayer)
-    //  SwitchPlayer();
+    currentPlayerTypePiece = secondPlayerPiece;
+    secondPlayerPiece = firstPlayerPiece;
+    firstPlayerPiece = 1 - firstPlayerPiece;
+
+    if (gameMode == GameMode.PVC)
+    {
+      if (currentPlayerTypePiece == playerInPVCMode)
+        isPlayerTurnAvailable = true;
+      else
+      {
+        isPlayerTurnAvailable = false;
+        StartCoroutine(PlayBotTurn(Random.Range(1f, 4f)));
+      }
+    }
+
     if (gameMode == GameMode.CVC)
       CVCCoroutine = StartCoroutine(SimulateComputerGame());
-    //if (gameMode != GameMode.PVC)
-    //  AdjustModeData();
-    //else if (currentPlayerType == PieceType.O)
-    //  StartCoroutine(PlayBotTurn(Random.Range(1f, 3f)));
-    //else
-    //  isPlayerTurnAvailable = true;
   }
+
+  bool IsBotFirstTurn() => boardManager.NumOfEmptyTiles >= 8;
 
   void AnimateWininigTriplate()
   {

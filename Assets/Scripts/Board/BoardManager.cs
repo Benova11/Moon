@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour
   BoardPiece hintPiece;
   public (int first, int second, int third) winningTriplet;
 
-  public PieceType CurrentPlayerPiece { get { return  GameManager.Instance.currentPlayerType; } }
+  public PieceType CurrentPlayerPiece { get { return  GameManager.Instance.currentPlayerTypePiece; } }
   public PieceType PlayerInPVCMode { get { return playerInPVCMode; } }
   public List<PieceType> CurrentBoardPiecesValues { get { return currentBoardPieces; } }
   public List<BoardPiece> boardPieces;
