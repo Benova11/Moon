@@ -73,6 +73,12 @@ public class GameSkinBundleCreator : EditorWindow
 
     buildMap[0].assetNames = skinAssets;
 
-    BuildPipeline.BuildAssetBundles(Path.Combine(Application.streamingAssetsPath, "SkinBundles"), buildMap, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
+    BuildTarget buildTarget = BuildTarget.StandaloneOSX;
+    #if !UNITY_STANDALONE_OSX
+      buildTarget = BuildTarget.StandaloneWindows
+    #endif
+
+    BuildPipeline.BuildAssetBundles(Path.Combine(Application.streamingAssetsPath, "SkinBundles"), buildMap, BuildAssetBundleOptions.None, buildTarget);
+
   }
 }
