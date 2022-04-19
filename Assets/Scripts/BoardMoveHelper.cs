@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 static class BoardMoveHelper
 {
@@ -15,7 +16,7 @@ static class BoardMoveHelper
 
   static int NumOfMovesLeft(PieceType[,] board)
   {
-    int currentNumOfMovesLeft = 1;
+    int currentNumOfMovesLeft = 0;
     for (int i = 0; i < 3; i++)
       for (int j = 0; j < 3; j++)
         if (board[i, j] == PieceType.Empty)
@@ -69,14 +70,14 @@ static class BoardMoveHelper
     return 0;
   }
 
-  static int MiniMax(PieceType[,] board,int depth,int maxDepthToTraverse, bool isMax)
+  static int MiniMax(PieceType[,] board,int depth,int difficultyValue, bool isMax)
   {
     int score = Evaluate(board);
     if (score == 10) return score;
     if (score == -10) return score;
-    int maxDepthAdjutedToMoves = NumOfMovesLeft(board) - maxDepthToTraverse;
-    if (IsMovesLeft(board) == false || depth > maxDepthAdjutedToMoves ) return 0;
-
+    int maxDepthAdjutedToDifficulty = 8 - difficultyValue;
+    if (IsMovesLeft(board) == false || depth > maxDepthAdjutedToDifficulty) return 0;
+    //if (!IsMovesLeft(board)) return 0;
     if (isMax)
     {
       int best = -1000;
@@ -87,7 +88,7 @@ static class BoardMoveHelper
           if (board[i, j] == PieceType.Empty)
           {
             board[i, j] = player1;
-            best = Math.Max(best, MiniMax(board,depth + 1, maxDepthToTraverse, !isMax));
+            best = Math.Max(best, MiniMax(board,depth + 1, difficultyValue, !isMax));
             board[i, j] = PieceType.Empty;
           }
         }
@@ -105,7 +106,7 @@ static class BoardMoveHelper
           if (board[i, j] == PieceType.Empty)
           {
             board[i, j] = player2;
-            best = Math.Min(best, MiniMax(board,depth + 1, maxDepthToTraverse, !isMax));
+            best = Math.Min(best, MiniMax(board,depth + 1, difficultyValue, !isMax));
             board[i, j] = PieceType.Empty;
           }
         }
@@ -166,7 +167,7 @@ static class BoardMoveHelper
   static int AdjustDifficultyToMaxDepth(int difficulty)
   {
     bool isEasy = difficulty == 0;
-    return isEasy ? 5 : difficulty == 1 ? 3 : 0;
+    return isEasy ? 6 : difficulty == 1 ? 4 : 0;
   }
 
   public static void ConvertListToMatrix(List<PieceType> board)
